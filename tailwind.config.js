@@ -4,18 +4,5 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
-    extend: {
-      colors: {
-        prime: {
-          light: '#00AEEF',
-          dark: '#0072BC'
-        }
-      },
-      borderRadius: {
-        'xl': '15px'
-      }
-    },
-  },
   plugins: [],
 }

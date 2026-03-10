@@ -1,27 +1,21 @@
 import React from 'react';
-import { MessageCircle, Facebook, Send, Mail, Phone, X } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
-export default function FloatingSocials() {
-    const socials = [
-        { icon: <MessageCircle size={20} className="text-[#00AEEF]" />, alt: 'Line' },
-        { icon: <Facebook size={20} className="text-[#00AEEF] fill-current" />, alt: 'Facebook' },
-        { icon: <Send size={20} className="text-[#00AEEF] fill-current -rotate-45" />, alt: 'Telegram' },
-        { icon: <Mail size={20} className="text-[#00AEEF]" />, alt: 'Mail' },
-        { icon: <Phone size={20} className="text-[#00AEEF] fill-current" />, alt: 'Phone' },
-        { icon: <X size={20} className="text-[#00AEEF]" />, alt: 'Close' },
-    ];
+export default function FloatingSocials({ onLiveChatClick }) {
+    const unreadCount = 2;
 
     return (
-        <div className="fixed right-4 top-1/2 -translate-y-1/2 z-[100] flex flex-col gap-3">
-            {socials.map((item, idx) => (
-                <button
-                    key={idx}
-                    className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-[#00AEEF] shadow-[0_2px_5px_rgba(0,174,239,0.3)] hover:scale-110 hover:bg-[#F0F8FF] transition-all"
-                    title={item.alt}
-                >
-                    {item.icon}
-                </button>
-            ))}
-        </div>
+        <button
+            type="button"
+            onClick={onLiveChatClick}
+            className="fixed bottom-6 right-6 z-[100] inline-flex h-14 w-14 items-center justify-center rounded-full bg-[linear-gradient(180deg,var(--color-accent-500)_0%,var(--color-brand-deep)_100%)] text-white shadow-[var(--shadow-nav-pill)] transition hover:brightness-110"
+            title="Live Chat"
+            aria-label="Open live chat"
+        >
+            <MessageCircle size={24} />
+            <span className="absolute right-0 top-0 inline-flex h-5 min-w-5 -translate-y-1 translate-x-1 items-center justify-center rounded-full bg-[var(--color-danger-main)] px-1 text-[11px] font-bold text-white">
+                {unreadCount}
+            </span>
+        </button>
     );
 }

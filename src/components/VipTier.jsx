@@ -17,11 +17,11 @@ export default function VipTier() {
         <section className="w-full pt-4 relative">
             <SectionHeader
                 title="VIP Group"
-                icon={<Crown size={22} fill="currentColor" className="text-[#0072BC]" />}
+                icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
                 rightLink="More Details"
             />
 
-            <p className="text-[#004C80] text-xs mb-8 leading-relaxed max-w-[1000px] font-semibold mt-4">
+            <p className="mt-4 mb-8 max-w-[1000px] text-xs font-semibold leading-relaxed text-[var(--color-text-brand-soft)]">
                 Join the Riocity9 VIP member group, you will receive many special privileges such as promotion bonus, monthly red envelope bonus, birthday bonus. All of these are special privileges for Riocity9 VIP customers only.
             </p>
 
@@ -41,22 +41,22 @@ export default function VipTier() {
                     {vipLevels.map((vp) => (
                         <div
                             key={vp.level}
-                            className="bg-white rounded-xl py-3 px-2 flex flex-col items-center justify-center border border-[#CCEEFF] shadow-[0_2px_8px_rgba(0,174,239,0.08)] hover:border-[#00AEEF] hover:shadow-[0_5px_15px_rgba(0,174,239,0.2)] transition-all cursor-pointer"
+                            className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-[var(--color-brand-soft-border)] bg-[var(--color-surface-base)] px-2 py-3 shadow-[var(--shadow-brand-soft)] transition-all hover:border-[var(--color-brand-primary)] hover:shadow-[var(--shadow-brand-card-strong)]"
                         >
                             {/* Header Box */}
                             <div className="flex items-center gap-1 mb-2">
-                                <div className="bg-gradient-to-br from-[#d0f0ff] to-[#f0f8ff] p-1.5 rounded-md text-[#00AEEF] transform -skew-x-[15deg]">
+                                <div className="bg-[linear-gradient(135deg,#d0f0ff_0%,#f0f8ff_100%)] p-1.5 rounded-md text-[var(--color-brand-primary)] transform -skew-x-[15deg]">
                                     <Crown size={20} fill="currentColor" strokeWidth={1} />
                                 </div>
-                                <h3 className="text-[#0072BC] text-lg font-black italic tracking-wide">VIP {vp.level}</h3>
+                                <h3 className="text-lg font-black italic tracking-wide text-[var(--color-brand-secondary)]">VIP {vp.level}</h3>
                             </div>
 
                             {/* Rules text */}
-                            <div className="text-center w-full border-t border-[#CCEEFF]/50 pt-2 relative">
-                                <p className="text-xs text-[#00AEEF] font-bold">
+                            <div className="relative w-full border-t border-[rgb(204_238_255_/_0.5)] pt-2 text-center">
+                                <p className="text-xs font-bold text-[var(--color-brand-primary)]">
                                     Valid Bet Point &gt; {vp.btn}
                                 </p>
-                                <p className="text-xs text-[#00AEEF] font-bold">
+                                <p className="text-xs font-bold text-[var(--color-brand-primary)]">
                                     Deposit Point = {vp.dep}
                                 </p>
                             </div>

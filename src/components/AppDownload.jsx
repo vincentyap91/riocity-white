@@ -69,7 +69,7 @@ const BadgeSVG = () => (
 /* ── Phone screen content ───────────────────────────────── */
 
 const PhoneBack = () => (
-    <div className="w-full h-full bg-gradient-to-b from-[#48C8F0] to-[#006EB5] rounded-[20px] p-2 pt-8 flex flex-col gap-2 overflow-hidden">
+    <div className="flex h-full w-full flex-col gap-2 overflow-hidden rounded-[20px] bg-[linear-gradient(180deg,#48C8F0_0%,#006EB5_100%)] p-2 pt-8">
         {/* Logo row */}
         <div className="flex items-center justify-between px-1">
             <div className="bg-white/20 rounded px-2 py-0.5 text-white font-black text-xs">LOGO</div>
@@ -92,7 +92,7 @@ const PhoneBack = () => (
 );
 
 const PhoneFront = () => (
-    <div className="w-full h-full bg-gradient-to-b from-[#00AEEF] to-[#004E96] rounded-[22px] p-2 pt-9 flex flex-col gap-1.5 overflow-hidden">
+    <div className="flex h-full w-full flex-col gap-1.5 overflow-hidden rounded-[22px] bg-[linear-gradient(180deg,var(--color-brand-primary)_0%,#004E96_100%)] p-2 pt-9">
         {/* Logo + top bar */}
         <div className="flex items-center justify-between px-1 py-0.5 bg-white/10 rounded-md">
             <div className="w-12 h-2.5 bg-white/60 rounded-sm" />
@@ -137,10 +137,10 @@ export default function AppDownload() {
 
             {/* ── Left: Text ────────────────────────────── */}
             <div className="flex-1 z-10 w-full max-w-sm">
-                <h2 className="text-2xl font-bold text-[#004C80] mb-4 tracking-tight leading-tight">
-                    Download the <span className="text-[#00AEEF]">Riocity9 APP</span>
+                <h2 className="mb-4 text-2xl font-bold leading-tight tracking-tight text-[var(--color-text-brand-soft)]">
+                    Download the <span className="text-[var(--color-brand-primary)]">Riocity9 APP</span>
                 </h2>
-                <p className="text-xs text-[#0072BC] font-semibold leading-relaxed opacity-80">
+                <p className="text-xs font-semibold leading-relaxed text-[var(--color-brand-secondary)] opacity-80">
                     Playing through the application is more convenient than playing through the website.
                     You can definitely feel the difference. Register to receive free credit and many bonuses through this channel.
                 </p>
@@ -208,9 +208,9 @@ export default function AppDownload() {
                                 <span className="text-xs font-bold text-gray-300">QR CODE</span>
                             </div>
                             {/* Scan-line hover effect */}
-                            <div className="absolute top-0 left-0 w-full h-[1px] bg-[#00AEEF] -translate-y-full group-hover:animate-[scan_1.5s_linear_infinite] shadow-[0_0_8px_#00a8e8]" />
+                            <div className="absolute top-0 left-0 h-[1px] w-full -translate-y-full bg-[var(--color-brand-primary)] shadow-[var(--shadow-scan)] group-hover:animate-[scan_1.5s_linear_infinite]" />
                         </div>
-                        <button className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-[#00CFFF] to-[#00AEEF] text-white px-4 py-1.5 rounded-full font-bold shadow-md hover:scale-105 transition-transform">
+                        <button className="flex items-center gap-1.5 rounded-full bg-[linear-gradient(90deg,#00CFFF_0%,var(--color-brand-primary)_100%)] px-4 py-1.5 text-xs font-bold text-white shadow-md transition-transform hover:scale-105">
                             {icon} {label}
                         </button>
                     </div>

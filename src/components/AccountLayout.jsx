@@ -1,0 +1,57 @@
+import React, { useState } from 'react';
+import { UserRound } from 'lucide-react';
+import AccountSidebar from './AccountSidebar';
+
+export default function AccountLayout({ activePage, authUser, onNavigate, onLogout, children }) {
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+
+    return (
+        <main
+            className="w-full bg-[linear-gradient(180deg,var(--gradient-account-shell-start)_0%,var(--gradient-account-shell-mid)_38%,var(--gradient-account-shell-end)_100%)] pb-16 pt-6 md:pt-8"
+            style={{ fontFamily: 'var(--font-family-sans)' }}
+        >
+            <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-6 px-4 md:px-6 xl:px-8">
+                <div className="flex items-center justify-between gap-3 lg:hidden">
+                    <button
+                        type="button"
+                        onClick={() => setMobileSidebarOpen((open) => !open)}
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-[var(--color-accent-100)] bg-[var(--color-surface-base)] px-4 py-2.5 text-sm font-semibold text-[var(--color-accent-700)] shadow-[var(--shadow-subtle)] transition-all hover:bg-[var(--color-accent-50)] hover:shadow"
+                    >
+                        <UserRound size={16} />
+                        Account Menu
+                    </button>
+                    <p className="text-right text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                        Secure Profile
+                    </p>
+                </div>
+
+                <div className="flex items-start gap-6 xl:gap-8">
+                    <div
+                        className={`fixed inset-y-0 left-0 z-[70] lg:relative lg:z-auto ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}
+                    >
+                        <AccountSidebar
+                            activePage={activePage}
+                            authUser={authUser}
+                            onNavigate={(page) => {
+                                onNavigate?.(page);
+                                setMobileSidebarOpen(false);
+                            }}
+                            onLogout={onLogout}
+                        />
+                    </div>
+
+                    {mobileSidebarOpen && (
+                        <button
+                            type="button"
+                            onClick={() => setMobileSidebarOpen(false)}
+                            className="fixed inset-0 z-[60] bg-slate-900/20 backdrop-blur-[2px] lg:hidden"
+                            aria-label="Close account menu"
+                        />
+                    )}
+
+                    <div className="min-w-0 flex-1">{children}</div>
+                </div>
+            </div>
+        </main>
+    );
+}

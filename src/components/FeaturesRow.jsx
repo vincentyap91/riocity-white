@@ -238,19 +238,19 @@ export default function FeaturesRow() {
         <section className="w-full pt-8">
             <SectionHeader
                 title="Outstanding Functions"
-                icon={<Crown size={22} fill="currentColor" className="text-[#0072BC]" />}
+                icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
             />
 
             <div className="flex justify-between items-center px-4 gap-4 mt-8 flex-wrap">
                 {features.map((item, idx) => (
                     <div
                         key={idx}
-                        className="flex-1 min-w-[200px] flex items-center justify-center gap-3 bg-white/40 border border-white rounded-xl py-3 px-4 shadow-[0_5px_15px_rgba(0,174,239,0.05)] hover:-translate-y-1 transition-transform group"
+                        className="group flex min-w-[200px] flex-1 items-center justify-center gap-3 rounded-xl border border-white bg-[rgb(255_255_255_/_0.4)] px-4 py-3 shadow-[0_5px_15px_rgba(0,174,239,0.05)] transition-transform hover:-translate-y-1"
                     >
-                        <div className="group-hover:scale-110 transition-transform bg-white rounded-full p-2 shadow-sm border border-[#E5F6FF] flex items-center justify-center">
+                        <div className="flex items-center justify-center rounded-full border border-[var(--color-brand-soft)] bg-[var(--color-surface-base)] p-2 shadow-sm transition-transform group-hover:scale-110">
                             {item.icon}
                         </div>
-                        <span className="text-[#0072BC] font-bold text-sm leading-tight max-w-[120px]">
+                        <span className="max-w-[120px] text-sm font-bold leading-tight text-[var(--color-brand-secondary)]">
                             {item.title}
                         </span>
                     </div>

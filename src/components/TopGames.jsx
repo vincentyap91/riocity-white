@@ -16,7 +16,7 @@ export default function TopGames() {
         <section className="w-full pt-4">
             <SectionHeader
                 title="Top Games"
-                icon={<Crown size={22} fill="currentColor" className="text-[#0072BC]" />}
+                icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
                 rightLink="See all"
             />
 
@@ -24,11 +24,11 @@ export default function TopGames() {
                 {games.map((game, idx) => (
                     <div
                         key={idx}
-                        className="flex flex-col bg-white rounded-xl shadow-[0_5px_15px_rgba(0,174,239,0.15)] group hover:-translate-y-1 transition-transform border-b-4 border-[#00AEEF] relative overflow-hidden h-[180px]"
+                        className="group relative flex h-[180px] flex-col overflow-hidden rounded-xl border-b-4 border-[var(--color-brand-primary)] bg-[var(--color-surface-base)] shadow-[var(--shadow-brand-card)] transition-transform hover:-translate-y-1"
                     >
                         {/* Top Image Box inside Gold Border */}
                         <div className="w-full h-full p-1.5 pb-0">
-                            <div className="w-full h-full relative rounded-t-[10px] overflow-hidden border-2 border-[#FFD700]/70 z-10">
+                            <div className="relative z-10 h-full w-full overflow-hidden rounded-t-[10px] border-2 border-[rgb(255_215_0_/_0.7)]">
 
                                 <div
                                     className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
@@ -37,13 +37,13 @@ export default function TopGames() {
 
                                 {/* Provider Badge Tag */}
                                 <div className="absolute top-0 left-0 bg-white px-2 py-0.5 rounded-br-lg z-20 shadow-sm flex items-center justify-center">
-                                    <span className="text-[#0072BC] font-black text-xs italic">{game.provider}</span>
+                                    <span className="text-[var(--color-brand-secondary)] font-black text-xs italic">{game.provider}</span>
                                 </div>
                             </div>
                         </div>
 
                         {/* Bottom Title Bar (already has border-bottom set on parent) */}
-                        <div className="bg-[#00AEEF] w-full py-1.5 text-center px-1 absolute bottom-0 z-30">
+                        <div className="absolute bottom-0 z-30 w-full bg-[var(--color-brand-primary)] px-1 py-1.5 text-center">
                             <span className="text-white text-xs font-bold block truncate">{game.name}</span>
                         </div>
                     </div>

@@ -45,8 +45,8 @@ export default function LiveCasinoPage() {
     const [bannerProvider, setBannerProvider] = useState(
         () => providerLogos.find((provider) => provider.name === 'SA Gaming') ?? providerLogos[0]
     );
-    const scrollAnimationFrameRef = useRef(null);
-    const scrollDelayTimeoutRef = useRef(null);
+    const [showStickyPlayBar, setShowStickyPlayBar] = useState(false);
+    const playButtonAreaRef = useRef(null);
 
     const filteredProviders = useMemo(() => {
         const text = query.trim().toLowerCase();
@@ -65,70 +65,64 @@ export default function LiveCasinoPage() {
 
     const handleSelectProvider = (provider) => {
         setBannerProvider(provider);
-
-        if (scrollAnimationFrameRef.current) {
-            cancelAnimationFrame(scrollAnimationFrameRef.current);
-        }
-
-        if (scrollDelayTimeoutRef.current) {
-            window.clearTimeout(scrollDelayTimeoutRef.current);
-        }
-
-        scrollDelayTimeoutRef.current = window.setTimeout(() => {
-            const startY = window.scrollY;
-            const endY = 0;
-            const distance = endY - startY;
-            const duration = 500;
-            const startTime = performance.now();
-
-            const easeInOutCubic = (progress) => (
-                progress < 0.5
-                    ? 4 * progress * progress * progress
-                    : 1 - Math.pow(-2 * progress + 2, 3) / 2
-            );
-
-            const animateScroll = (currentTime) => {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const easedProgress = easeInOutCubic(progress);
-
-                window.scrollTo(0, startY + distance * easedProgress);
-
-                if (progress < 1) {
-                    scrollAnimationFrameRef.current = requestAnimationFrame(animateScroll);
-                } else {
-                    scrollAnimationFrameRef.current = null;
-                }
-            };
-
-            scrollAnimationFrameRef.current = requestAnimationFrame(animateScroll);
-            scrollDelayTimeoutRef.current = null;
-        }, 140);
     };
 
-    useEffect(() => () => {
-        if (scrollAnimationFrameRef.current) {
-            cancelAnimationFrame(scrollAnimationFrameRef.current);
-        }
+    useEffect(() => {
+        const el = playButtonAreaRef.current;
+        if (!el) return;
 
-        if (scrollDelayTimeoutRef.current) {
-            window.clearTimeout(scrollDelayTimeoutRef.current);
-        }
+        const observer = new IntersectionObserver(
+            ([entry]) => setShowStickyPlayBar(!entry.isIntersecting),
+            { threshold: 0, rootMargin: '-80px 0px 0px 0px', root: null }
+        );
+
+        observer.observe(el);
+        return () => observer.disconnect();
     }, []);
+
+    const PlayButton = ({ className = '' }) => (
+        <a
+            href="#"
+            className={`btn-theme-cta inline-flex h-10 min-w-[140px] items-center justify-center rounded-[10px] px-5 text-sm font-black tracking-[0.06em] transition hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta-focus)] focus-visible:ring-offset-2 md:h-12 md:min-w-[180px] md:px-8 md:text-base ${className}`}
+            aria-label={`Play ${bannerProvider.name}`}
+        >
+            PLAY LIVE
+        </a>
+    );
 
     return (
         <main
-            className="w-full pb-14 bg-[linear-gradient(180deg,#eaf0ff_0%,#f6f9ff_36%,#ecf1f9_100%)]"
+            className="w-full pb-14 bg-[linear-gradient(180deg,var(--gradient-live-page-start)_0%,var(--gradient-live-page-mid)_36%,var(--gradient-live-page-end)_100%)]"
             style={{ fontFamily: 'Bahnschrift, "Trebuchet MS", Verdana, sans-serif' }}
         >
-            <section className="w-full border-y border-[#dbe2f0] bg-white/85 backdrop-blur">
+            {showStickyPlayBar && (
+                <div
+                    className="fixed left-0 right-0 top-22 z-40 bg-[rgb(255_255_255_/_0.95)] backdrop-blur-md shadow-[0_8px_24px_rgba(16,32,72,0.12)]"
+                    role="banner"
+                    aria-label="Quick play bar"
+                >
+                    <div className="flex items-center justify-center gap-4 px-4 py-3">
+                    <img
+                        src={bannerProvider.src}
+                        alt={bannerProvider.name}
+                        className="h-8 md:h-10 object-contain"
+                    />
+                    <span className="hidden text-sm font-bold text-[rgb(42_53_72)] sm:inline md:text-base">
+                        {bannerProvider.name}
+                    </span>
+                    <PlayButton />
+                    </div>
+                </div>
+            )}
+
+            <section className="w-full border-y border-[rgb(219_226_240)] bg-[var(--color-surface-base-85)] backdrop-blur">
                 <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 h-12 flex items-center justify-between">
-                    <div className="text-xs font-semibold tracking-[0.16em] text-[#667086] uppercase">
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[rgb(102_112_134)]">
                         Premium Live Casino Lounge
                     </div>
-                    <div className="hidden sm:flex items-center gap-3 text-xs text-[#53607a] font-semibold">
+                    <div className="hidden items-center gap-3 text-xs font-semibold text-[rgb(83_96_122)] sm:flex">
                         <span>High Definition Stream</span>
-                        <span className="w-1 h-1 rounded-full bg-[#99a6be]"></span>
+                        <span className="h-1 w-1 rounded-full bg-[rgb(153_166_190)]"></span>
                         <span>Fast Payout</span>
                     </div>
                 </div>
@@ -136,13 +130,13 @@ export default function LiveCasinoPage() {
 
             <section className="w-full">
                 <div className="w-full mx-auto">
-                    <div className="relative overflow-hidden border border-[#d5deef] shadow-[0_14px_34px_rgba(16,32,72,0.16)]">
+                    <div className="relative overflow-hidden border border-[var(--color-border-live)] shadow-[var(--shadow-live-banner)]">
                         <img
                             src={liveCasinoBanner}
                             alt="Live Casino Banner"
-                            className="w-full h-auto block bg-[#dde8f8]"
+                            className="block h-auto w-full bg-[rgb(221_232_248)]"
                         />
-                        <div className="absolute inset-y-0 right-0 w-full md:w-[50%] flex items-center justify-start">
+                        <div ref={playButtonAreaRef} className="absolute inset-y-0 right-0 w-full md:w-[50%] flex items-center justify-start">
                             <div className="w-full max-w-[500px] px-4 py-4 md:px-8 md:py-7 text-center">
                                 <div className="mt-4 md:mt-5 flex justify-center">
                                         <img
@@ -152,12 +146,12 @@ export default function LiveCasinoPage() {
                                         />
                                 </div>
 
-                                <p className="mt-2 md:mt-4 mx-auto max-w-[420px] text-[#2a3548] text-sm md:text-xl leading-[1.35] md:leading-[1.32] font-semibold">
+                                <p className="mx-auto mt-2 max-w-[420px] text-sm font-semibold leading-[1.35] text-[rgb(42_53_72)] md:mt-4 md:text-xl md:leading-[1.32]">
                                     Experience premium real-time casino games with top live dealers.
                                 </p>
                                 <a
                                     href="#"
-                                    className="inline-flex mt-4 md:mt-6 h-10 md:h-14 min-w-[170px] md:min-w-[260px] px-7 md:px-12 items-center justify-center rounded-[10px] text-sm md:text-xl font-black tracking-[0.06em] text-white bg-[linear-gradient(180deg,#ffcc33_0%,#f29a00_100%)] border border-[#f0bb3d] shadow-[0_10px_20px_rgba(242,154,0,0.34)] hover:brightness-105 hover:-translate-y-0.5 active:translate-y-0 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd166] focus-visible:ring-offset-2 focus-visible:ring-offset-[#1d3354] transition"
+                                    className="btn-theme-cta mt-4 inline-flex h-10 min-w-[170px] items-center justify-center rounded-[10px] px-7 text-sm font-black tracking-[0.06em] transition hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(29_51_84)] md:mt-6 md:h-14 md:min-w-[260px] md:px-12 md:text-xl"
                                     aria-label={`Play ${bannerProvider.name}`}
                                 >
                                     PLAY LIVE
@@ -175,10 +169,10 @@ export default function LiveCasinoPage() {
                         return (
                             <article
                                 key={stat.label}
-                                className="rounded-xl md:rounded-2xl border border-[#d8e1f2] bg-[linear-gradient(180deg,#ffffff_0%,#f4f8ff_100%)] px-2 py-2 md:px-4 md:py-3 text-[#23314d] shadow-[0_8px_18px_rgba(4,16,44,0.09)]"
+                                className="rounded-xl border border-[rgb(216_225_242)] bg-[linear-gradient(180deg,var(--gradient-soft-panel-start)_0%,#f4f8ff_100%)] px-2 py-2 text-[rgb(35_49_77)] shadow-[var(--shadow-live-card)] md:rounded-2xl md:px-4 md:py-3"
                             >
                                 <div className="flex items-center gap-2">
-                                    <Icon size={14} className="md:w-[18px] md:h-[18px] text-[#3560aa]" />
+                                    <Icon size={14} className="text-[rgb(53_96_170)] md:h-[18px] md:w-[18px]" />
                                     <p className="text-base md:text-2xl font-extrabold leading-none">{stat.value}</p>
                                 </div>
                                 <p className="text-xs md:text-xs tracking-[0.08em] uppercase mt-1 opacity-90">{stat.label}</p>
@@ -189,21 +183,21 @@ export default function LiveCasinoPage() {
             </section>
 
             <section id="live-casino-providers" className="w-full max-w-[1400px] mx-auto px-4 md:px-8 mt-4 md:mt-6">
-                <div className="rounded-2xl border border-[#dbe4f3] bg-white/80 backdrop-blur-sm shadow-[0_6px_18px_rgba(20,43,87,0.09)] p-4 md:p-5">
+                <div className="rounded-2xl border border-[rgb(219_228_243)] bg-[var(--color-surface-base-80)] p-4 shadow-[0_6px_18px_rgba(20,43,87,0.09)] backdrop-blur-sm md:p-5">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div>
-                            <p className="text-[#1c2841] text-xl md:text-2xl font-extrabold tracking-[0.02em]">Live Casino Providers</p>
-                            <p className="text-[#5d6780] text-xs md:text-sm mt-1">
+                            <p className="text-xl font-extrabold tracking-[0.02em] text-[rgb(28_40_65)] md:text-2xl">Live Casino Providers</p>
+                            <p className="mt-1 text-xs text-[rgb(93_103_128)] md:text-sm">
                                 Choose from top brands with real-time action and studio-grade stream quality.
                             </p>
                         </div>
-                        <label className="w-full lg:w-[330px] h-11 rounded-xl border border-[#d5deef] bg-white px-3 flex items-center gap-2 shadow-[inset_0_1px_2px_rgba(9,30,66,0.06)]">
-                            <Search size={16} className="text-[#5f6e8b]" />
+                        <label className="flex h-11 w-full items-center gap-2 rounded-xl border border-[var(--color-border-live)] bg-[var(--color-surface-base)] px-3 shadow-[inset_0_1px_2px_rgba(9,30,66,0.06)] lg:w-[330px]">
+                            <Search size={16} className="text-[rgb(95_110_139)]" />
                             <input
                                 value={query}
                                 onChange={(event) => setQuery(event.target.value)}
                                 placeholder="Search provider"
-                                className="w-full bg-transparent outline-none text-sm text-[#2a3a58] placeholder:text-[#8b97ae] font-semibold"
+                                className="w-full bg-transparent text-sm font-semibold text-[rgb(42_58_88)] outline-none placeholder:text-[rgb(139_151_174)]"
                             />
                         </label>
                     </div>
@@ -218,8 +212,8 @@ export default function LiveCasinoPage() {
                                     onClick={() => setActiveTag(tag)}
                                     className={`px-3 py-1.5 rounded-full text-xs md:text-xs font-bold tracking-wide border transition ${
                                         selected
-                                            ? 'bg-[linear-gradient(180deg,#ffd86f_0%,#ffb038_100%)] text-[#2d1a00] border-[#ffbf53] shadow-[0_5px_10px_rgba(255,176,56,0.2)]'
-                                            : 'bg-white text-[#405172] border-[#d7e0ef] hover:border-[#b8c6e2] hover:text-[#22335a]'
+                                            ? 'bg-[linear-gradient(180deg,#ffd86f_0%,#ffb038_100%)] text-[rgb(45_26_0)] border-[rgb(255_191_83)] shadow-[0_5px_10px_rgba(255,176,56,0.2)]'
+                                            : 'bg-[var(--color-surface-base)] text-[rgb(64_81_114)] border-[rgb(215_224_239)] hover:border-[rgb(184_198_226)] hover:text-[rgb(34_51_90)]'
                                     }`}
                                 >
                                     {tag}
@@ -228,7 +222,7 @@ export default function LiveCasinoPage() {
                         })}
                     </div>
 
-                    <p className="mt-3 text-xs md:text-xs font-bold tracking-[0.08em] text-[#6a7590] uppercase">
+                    <p className="mt-3 text-xs font-bold uppercase tracking-[0.08em] text-[rgb(106_117_144)] md:text-xs">
                         {filteredProviders.length} provider{filteredProviders.length === 1 ? '' : 's'} found
                     </p>
                 </div>
@@ -241,15 +235,15 @@ export default function LiveCasinoPage() {
                             key={provider.name}
                             type="button"
                             onClick={() => handleSelectProvider(provider)}
-                            className={`group relative h-[86px] md:h-[104px] rounded-3xl border bg-[#f2f3f5] shadow-[0_8px_16px_rgba(18,34,66,0.08)] flex items-center justify-center px-3 transition duration-300 hover:-translate-y-1 hover:shadow-[0_14px_24px_rgba(14,35,79,0.18)] ${
+                            className={`group relative flex h-[86px] items-center justify-center rounded-3xl border bg-[var(--color-page-default)] px-3 shadow-[var(--shadow-live-provider)] transition duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-live-provider-hover)] md:h-[104px] ${
                                 bannerProvider.name === provider.name
-                                    ? 'border-[#1f5da8] ring-2 ring-[#1f5da8]/25'
-                                    : 'border-[#d1d8e5] hover:border-[#b7c2d7]'
+                                    ? 'border-[var(--color-brand-deep)] ring-2 ring-[rgb(31_93_168_/_0.25)]'
+                                    : 'border-[rgb(209_216_229)] hover:border-[rgb(183_194_215)]'
                             }`}
                             aria-label={`Show ${provider.name} in banner`}
                         >
                             {provider.featured && (
-                                <span className="absolute right-2 top-2 rounded-full bg-[#ff4d00] text-white text-xs md:text-xs font-black px-2.5 py-0.5 tracking-wide shadow-[0_4px_8px_rgba(255,77,0,0.35)]">
+                                <span className="absolute right-2 top-2 rounded-full bg-[var(--color-hot-main)] px-2.5 py-0.5 text-xs font-black tracking-wide text-white shadow-[var(--shadow-hot)] md:text-xs">
                                     HOT
                                 </span>
                             )}
@@ -265,9 +259,9 @@ export default function LiveCasinoPage() {
                     ))}
                 </div>
                 {filteredProviders.length === 0 && (
-                    <div className="mt-6 rounded-2xl border border-[#dce4f2] bg-white px-4 py-7 text-center">
-                        <p className="text-[#2b3a57] font-extrabold text-base">No providers match your search.</p>
-                        <p className="text-[#6a7590] text-xs mt-1">Try a different keyword or switch filter.</p>
+                    <div className="mt-6 rounded-2xl border border-[rgb(220_228_242)] bg-[var(--color-surface-base)] px-4 py-7 text-center">
+                        <p className="text-base font-extrabold text-[rgb(43_58_87)]">No providers match your search.</p>
+                        <p className="mt-1 text-xs text-[rgb(106_117_144)]">Try a different keyword or switch filter.</p>
                     </div>
                 )}
             </section>

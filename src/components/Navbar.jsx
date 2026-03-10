@@ -14,10 +14,12 @@ import {
     UserRound
 } from 'lucide-react';
 import LiveCasinoMenu from './LiveCasinoMenu';
+import { supportOptions } from '../constants/supportOptions';
 
-export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, onRegisterClick, authUser, onLogout }) {
+export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, onRegisterClick, authUser, onLogout, onAccountDetailsClick, onBetSlipClick }) {
     const [casinoMenuOpen, setCasinoMenuOpen] = useState(false);
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const [openProfileSection, setOpenProfileSection] = useState('account');
     const profileMenuRef = useRef(null);
 
     const mainLinks = [
@@ -25,8 +27,8 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
         'Fishing', 'Poker', '3D Games', 'Cockfight', '4D', 'Fast Games',
         'Promotion', 'VIP', 'More'
     ];
-    const navTargets = { Home: 'home', Casino: 'live-casino' };
-    const navHrefs = { Home: '/', Casino: '/casino' };
+    const navTargets = { Home: 'home', Casino: 'live-casino', Slots: 'slots' };
+    const navHrefs = { Home: '/', Casino: '/casino', Slots: '/slots' };
     const accountCards = [
         { label: 'Account Details', icon: UserRound },
         { label: 'Verification', icon: ShieldCheck },
@@ -50,14 +52,18 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
         return () => window.removeEventListener('pointerdown', handlePointerDown);
     }, [profileMenuOpen]);
 
+    const toggleProfileSection = (sectionKey) => {
+        setOpenProfileSection((current) => (current === sectionKey ? null : sectionKey));
+    };
+
     return (
         <nav
-            className="w-full relative z-50 shadow-md"
+            className="fixed top-0 left-0 right-0 w-full z-50 shadow-md"
             onMouseLeave={() => setCasinoMenuOpen(false)}
         >
-            <div className="w-full bg-[#0072BC] h-8 flex justify-between items-center px-4 md:px-10 text-xs text-white">
+            <div className="flex h-8 w-full items-center justify-between bg-[var(--color-nav-top)] px-4 text-xs text-white md:px-10">
                 <div className="flex gap-4 items-center h-full">
-                    <a href="#" className="flex items-center gap-1 hover:text-white/80 h-full px-2 border-r border-[#00AEEF]">
+                    <a href="#" className="flex h-full items-center gap-1 border-r border-[var(--color-brand-primary)] px-2 hover:text-white/80">
                         <span className="text-sm">Mobile</span>
                     </a>
                     <a href="#" className="flex items-center gap-1 hover:text-white/80 h-full">
@@ -69,11 +75,11 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                     {authUser ? (
                         <div
                             ref={profileMenuRef}
-                            className="relative flex h-full items-center gap-1 rounded-[12px] px-1 py-0.5 shadow-[0_8px_16px_rgba(0,73,156,0.2)]"
+                            className="relative flex h-full items-center gap-1 rounded-[12px] px-1 py-0.5 shadow-[var(--shadow-nav-top)]"
                         >
-                            <div className="flex h-7 items-center gap-1.5 rounded-[9px] border border-white/10 bg-[#0e63bb] px-3 text-white">
+                            <div className="flex h-7 items-center gap-1.5 rounded-[9px] border border-white/10 bg-[rgb(14_99_187)] px-3 text-white">
                                 <span className="font-bold tracking-[0.01em]">{authUser.balance}</span>
-                                <CircleDollarSign size={14} className="text-[#ffd84d]" />
+                                <CircleDollarSign size={14} className="text-[var(--color-nav-gold)]" />
                             </div>
                             <button
                                 type="button"
@@ -82,11 +88,11 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 aria-haspopup="menu"
                                 aria-expanded={profileMenuOpen}
                             >
-                                <span className="font-bold text-[#fff0a0]">{authUser.name}</span>
+                                <span className="font-bold text-[rgb(255_240_160)]">{authUser.name}</span>
                                 <div className="relative">
                                     <UserCircle2 size={20} className="text-white/90" />
                                     {authUser.notifications > 0 && (
-                                        <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[#ff5b2e] px-1 text-[10px] font-black text-white">
+                                        <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-danger-main)] px-1 text-[10px] font-black text-white">
                                             {authUser.notifications}
                                         </span>
                                     )}
@@ -105,7 +111,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             </button>
                             <button
                                 type="button"
-                                className="h-7 rounded-[9px] bg-[linear-gradient(180deg,#ffcf4a_0%,#ffb22d_100%)] px-4 font-black tracking-wide text-[#0c4a8e] shadow-[0_6px_12px_rgba(255,174,39,0.22)] hover:brightness-105 transition"
+                                className="btn-theme-cta-soft h-7 rounded-[9px] px-4 font-black tracking-wide transition hover:brightness-105"
                             >
                                 DEPOSIT
                             </button>
@@ -121,17 +127,17 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             </div>
 
                             {profileMenuOpen && (
-                                <div className="absolute right-15 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[22px] border border-[#6ac8ff]/18 bg-[linear-gradient(180deg,#0d3f83_0%,#062754_100%)] p-4 text-white shadow-[0_20px_44px_rgba(0,16,56,0.4)]">
+                                <div className="dark-nav-shell absolute right-15 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[22px] p-4 text-white">
                                     <div className="absolute inset-x-0 top-0 h-20 bg-[radial-gradient(circle_at_top,#29bbff55_0%,transparent_72%)] pointer-events-none" />
 
                                     <div className="relative flex items-start gap-3">
                                         <div className="relative shrink-0">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-full border-[3px] border-[#56b9ff]/30 bg-[linear-gradient(180deg,#1a5bb1_0%,#0b3e80_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-full border-[3px] border-[rgb(86_185_255_/_0.3)] bg-[linear-gradient(180deg,#1a5bb1_0%,#0b3e80_100%)] shadow-[var(--inset-highlight-strong)]">
                                                 <UserCircle2 size={40} className="text-white/90" />
                                             </div>
                                             <button
                                                 type="button"
-                                                className="absolute bottom-0 right-0 inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/15 bg-[#2c66c3] text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)]"
+                                                className="absolute bottom-0 right-0 inline-flex h-6 w-6 items-center justify-center rounded-full border border-white/15 bg-[var(--color-nav-badge)] text-white shadow-[0_6px_12px_rgba(0,0,0,0.22)]"
                                                 aria-label="Edit profile"
                                             >
                                                 <ScrollText size={12} />
@@ -142,72 +148,137 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                             <p className="truncate text-xl font-extrabold leading-none text-white">
                                                 Hi, {authUser.name}
                                             </p>
-                                            <div className="mt-1.5 space-y-1 text-xs text-[#d3eaff]">
+                                            <div className="mt-1.5 space-y-1 text-xs text-[var(--color-nav-text-soft)]">
                                                 <p className="flex items-center gap-2">
-                                                    <span className="text-[#8ad4ff]">Joined:</span>
+                                                    <span className="text-[var(--color-nav-text-accent)]">Joined:</span>
                                                     <span className="font-semibold">08/01/2026</span>
                                                 </p>
                                                 <p className="flex items-center gap-2">
-                                                    <span className="text-[#8ad4ff]">Player ID:</span>
+                                                    <span className="text-[var(--color-nav-text-accent)]">Player ID:</span>
                                                     <span className="font-semibold">679129</span>
                                                 </p>
                                             </div>
-                                            <div className="mt-2 inline-flex items-center rounded-full border border-[#3d7dcb] bg-[linear-gradient(180deg,#143567_0%,#0e2547_100%)] px-2.5 py-1 text-xs font-bold text-[#dbeaff] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+                                            <div className="mt-2 inline-flex items-center rounded-full border border-[rgb(61_125_203)] bg-[linear-gradient(180deg,#143567_0%,#0e2547_100%)] px-2.5 py-1 text-xs font-bold text-[rgb(219_234_255)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
                                                 Iron
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="relative mt-4 rounded-[18px] border border-[#6ac8ff]/12 bg-[linear-gradient(180deg,#103a79_0%,#08234a_100%)] p-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-                                        <div className="mb-3 flex items-center justify-between">
+                                    <div className="dark-nav-panel relative mt-4 rounded-[18px] p-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleProfileSection('account')}
+                                            className="flex w-full items-center justify-between"
+                                        >
                                             <div className="flex items-center gap-3">
-                                                <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[#ffcf4a] shadow-[0_8px_16px_rgba(1,22,63,0.25)]">
+                                                <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[var(--color-nav-gold)] shadow-[var(--shadow-nav-pill)]">
                                                     <UserRound size={14} />
                                                 </div>
                                                 <span className="text-lg font-bold text-white">My Account</span>
                                             </div>
-                                            <ChevronDown size={16} className="text-white/80" />
-                                        </div>
+                                            <ChevronDown
+                                                size={16}
+                                                className={`text-white/80 transition-transform ${openProfileSection === 'account' ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
 
-                                        <div className="grid grid-cols-3 gap-3">
-                                            {accountCards.map(({ label, icon: Icon }) => (
-                                                <button
-                                                    key={label}
-                                                    type="button"
-                                                    className="group flex min-h-[72px] flex-col items-center justify-center rounded-[14px] border border-[#57b5ff]/10 bg-[linear-gradient(180deg,#092c5a_0%,#041c3b_100%)] px-2 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.05)] transition hover:-translate-y-0.5 hover:border-[#66cbff]/30 hover:shadow-[0_14px_24px_rgba(3,22,58,0.34)]"
-                                                >
-                                                    <Icon size={18} className="mb-1.5 text-[#1f83ff] group-hover:text-[#5cc4ff]" />
-                                                    <span className="text-xs font-bold leading-tight text-white">{label}</span>
-                                                </button>
-                                            ))}
-                                        </div>
+                                        {openProfileSection === 'account' && (
+                                            <div className="mt-3 grid grid-cols-3 gap-3">
+                                                {accountCards.map(({ label, icon: Icon }) => (
+                                                    <button
+                                                        key={label}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setProfileMenuOpen(false);
+
+                                                            if (label === 'Account Details') {
+                                                                onAccountDetailsClick?.();
+                                                            }
+
+                                                            if (label === 'Bet Slip') {
+                                                                onBetSlipClick?.();
+                                                            }
+                                                        }}
+                                                        className="dark-nav-tile group flex min-h-[72px] flex-col items-center justify-center rounded-[14px] px-2 text-center transition hover:-translate-y-0.5 hover:border-[var(--color-nav-tile-border-hover)] hover:shadow-[var(--shadow-nav-tile-hover)]"
+                                                    >
+                                                        <Icon size={18} className="mb-1.5 text-[var(--color-nav-blue-icon)] group-hover:text-[var(--color-nav-blue-icon-hover)]" />
+                                                        <span className="text-xs font-bold leading-tight text-white">{label}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
 
-                                    <button
-                                        type="button"
-                                        className="mt-3 flex w-full items-center justify-between rounded-[18px] border border-[#6ac8ff]/12 bg-[linear-gradient(180deg,#103a79_0%,#08234a_100%)] px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-[#66cbff]/24"
-                                    >
-                                        <span className="flex items-center gap-3">
-                                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[#5ad0ff]">
-                                                <Headset size={14} />
-                                            </span>
-                                            <span className="text-base font-bold text-white">Support</span>
-                                        </span>
-                                        <ChevronDown size={16} className="text-white/80" />
-                                    </button>
+                                    <div className="dark-nav-panel relative mt-3 rounded-[18px] p-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleProfileSection('support')}
+                                            className="flex w-full items-center justify-between transition hover:opacity-90"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[rgb(90_208_255)] shadow-[var(--shadow-nav-pill)]">
+                                                    <Headset size={14} />
+                                                </div>
+                                                <span className="text-lg font-bold text-white">Support</span>
+                                            </div>
+                                            <ChevronDown
+                                                size={16}
+                                                className={`text-white/80 transition-transform ${openProfileSection === 'support' ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+                                        {openProfileSection === 'support' && (
+                                            <>
+                                                <div className="mt-3 grid grid-cols-3 gap-2">
+                                                    {supportOptions.filter((o) => !o.fullWidth).map(({ label, icon: Icon }) => (
+                                                        <button
+                                                            key={label}
+                                                            type="button"
+                                                            className="dark-nav-tile group flex min-h-[64px] flex-col items-center justify-center rounded-[14px] px-2 text-center transition hover:-translate-y-0.5 hover:border-[var(--color-nav-tile-border-hover)] hover:shadow-[var(--shadow-nav-tile-hover)]"
+                                                        >
+                                                            <Icon size={18} className="mb-1.5 text-[var(--color-nav-blue-icon)] group-hover:text-[var(--color-nav-blue-icon-hover)]" />
+                                                            <span className="text-xs font-bold leading-tight text-white">{label}</span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                                {supportOptions
+                                                    .filter((o) => o.fullWidth)
+                                                    .map(({ label, icon: Icon }) => (
+                                                        <button
+                                                            key={label}
+                                                            type="button"
+                                                            className="dark-nav-tile mt-2 flex w-full flex-col items-center justify-center gap-1.5 rounded-[14px] py-3 text-center transition hover:-translate-y-0.5 hover:border-[var(--color-nav-tile-border-hover)] hover:shadow-[var(--shadow-nav-tile-hover)]"
+                                                        >
+                                                            <Icon size={18} className="text-[var(--color-nav-blue-icon)]" />
+                                                            <span className="text-xs font-bold leading-tight text-white">{label}</span>
+                                                        </button>
+                                                    ))}
+                                            </>
+                                        )}
+                                    </div>
 
-                                    <button
-                                        type="button"
-                                        className="mt-3 flex w-full items-center justify-between rounded-[18px] border border-[#6ac8ff]/12 bg-[linear-gradient(180deg,#103a79_0%,#08234a_100%)] px-4 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition hover:border-[#66cbff]/24"
-                                    >
-                                        <span className="flex items-center gap-3">
-                                            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[#4b8dff]">
-                                                <Settings size={14} />
+                                    <div className="dark-nav-panel mt-3 rounded-[18px] px-4 py-3 transition hover:border-[rgb(102_203_255_/_0.24)]">
+                                        <button
+                                            type="button"
+                                            onClick={() => toggleProfileSection('settings')}
+                                            className="flex w-full items-center justify-between text-left"
+                                        >
+                                            <span className="flex items-center gap-3">
+                                                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[linear-gradient(180deg,#2a87d6_0%,#1b58ae_100%)] text-[rgb(75_141_255)]">
+                                                    <Settings size={14} />
+                                                </span>
+                                                <span className="text-base font-bold text-white">Settings</span>
                                             </span>
-                                            <span className="text-base font-bold text-white">Settings</span>
-                                        </span>
-                                        <ChevronDown size={16} className="text-white/80" />
-                                    </button>
+                                            <ChevronDown
+                                                size={16}
+                                                className={`text-white/80 transition-transform ${openProfileSection === 'settings' ? 'rotate-180' : ''}`}
+                                            />
+                                        </button>
+                                        {openProfileSection === 'settings' && (
+                                            <div className="mt-3 rounded-[14px] border border-[var(--color-nav-tile-border)] bg-[linear-gradient(180deg,#092c5a_0%,#041c3b_100%)] px-3 py-3 text-sm text-[var(--color-nav-text-soft)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                                                Preferences, security and notification controls.
+                                            </div>
+                                        )}
+                                    </div>
 
                                     <button
                                         type="button"
@@ -215,7 +286,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                             setProfileMenuOpen(false);
                                             onLogout?.();
                                         }}
-                                        className="mt-4 inline-flex items-center gap-2.5 text-base font-extrabold text-[#ffd84d] transition hover:text-[#ffe27d]"
+                                        className="mt-4 inline-flex items-center gap-2.5 text-base font-extrabold text-[var(--color-nav-gold)] transition hover:text-[var(--color-nav-gold-soft)]"
                                     >
                                         <LogOut size={16} />
                                         Log Out
@@ -235,7 +306,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             <button
                                 type="button"
                                 onClick={() => onRegisterClick?.()}
-                                className="h-full px-6 rounded bg-[#39B54A] shadow-[0_0_8px_rgba(57,181,74,0.6)] hover:bg-[#2e9e3c] transition-colors font-semibold shadow-inner"
+                                className="h-full rounded bg-[var(--color-success-main)] px-6 font-semibold shadow-[var(--shadow-success)] shadow-inner transition-colors hover:bg-[var(--color-success-hover)]"
                             >
                                 Join Now
                             </button>
@@ -247,7 +318,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                 </div>
             </div>
 
-            <div className="w-full bg-[#00AEEF] h-14 flex items-center px-4 md:px-10">
+            <div className="flex h-14 w-full items-center bg-[var(--color-nav-main)] px-4 md:px-10">
                 <div className="w-full max-w-[1400px] mx-auto flex items-center justify-between">
                     <button
                         type="button"
@@ -284,7 +355,8 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 className={`text-white text-xs font-medium hover:text-yellow-300 transition-colors whitespace-nowrap drop-shadow-sm
                     ${link === 'More' ? 'flex items-center group' : ''}
                     ${activePage === 'home' && link === 'Home' ? 'text-yellow-300' : ''}
-                    ${activePage === 'live-casino' && link === 'Casino' ? 'text-yellow-300' : ''}`}
+                    ${activePage === 'live-casino' && link === 'Casino' ? 'text-yellow-300' : ''}
+                    ${activePage === 'slots' && link === 'Slots' ? 'text-yellow-300' : ''}`}
                             >
                                 {link}
                                 {link === 'More' && <ChevronDown size={14} className="ml-0.5 group-hover:rotate-180 transition-transform" strokeWidth={3} />}
@@ -300,7 +372,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
             />
 
             {casinoMenuOpen && (
-                <div className="fixed inset-x-0 bottom-0 top-[88px] z-[70] bg-[#020b1f]/75 backdrop-blur-[1px] pointer-events-none" />
+                <div className="fixed inset-x-0 bottom-0 top-[88px] z-[70] bg-[var(--color-nav-overlay)] backdrop-blur-[1px] pointer-events-none" />
             )}
         </nav>
     );

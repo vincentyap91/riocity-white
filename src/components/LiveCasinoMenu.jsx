@@ -35,7 +35,7 @@ export default function LiveCasinoMenu({ open = true, providers = defaultProvide
     }
 
     return (
-        <section className="absolute left-1/2 top-full z-[80] w-screen -translate-x-1/2 border-t border-[#1a3b72]">
+        <section className="absolute left-1/2 top-full z-[80] w-screen -translate-x-1/2 border-t border-[rgb(26_59_114)]">
             <div className="mx-auto w-full max-w-[1400px] px-4 py-5 md:px-8 md:py-7">
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-7">
                     {providers.map((provider) => (
@@ -43,7 +43,7 @@ export default function LiveCasinoMenu({ open = true, providers = defaultProvide
                             key={provider.id}
                             type="button"
                             onClick={() => onProviderClick?.(provider)}
-                            className="group relative h-[160px] w-[160px] justify-self-center overflow-hidden rounded-2xl border border-white/10 bg-[#0a1c3f] text-left transition duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-[#9ec7ff]/70 hover:shadow-[0_0_0_1px_rgba(120,178,255,0.45),0_14px_24px_rgba(7,19,44,0.75),0_0_24px_rgba(97,156,255,0.35)]"
+                            className="group relative h-[160px] w-[160px] justify-self-center overflow-hidden rounded-2xl border border-white/10 bg-[rgb(10_28_63)] text-left transition duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-[rgb(158_199_255_/_0.7)] hover:shadow-[0_0_0_1px_rgba(120,178,255,0.45),0_14px_24px_rgba(7,19,44,0.75),0_0_24px_rgba(97,156,255,0.35)]"
                         >
                             <img
                                 src={provider.image}
@@ -53,7 +53,7 @@ export default function LiveCasinoMenu({ open = true, providers = defaultProvide
                             />
 
                             {provider.hot && (
-                                <span className="absolute right-2 top-2 rounded-full bg-[#ff4d00] px-2 py-0.5 text-xs font-black tracking-[0.06em] text-white shadow-[0_4px_10px_rgba(255,77,0,0.4)]">
+                                <span className="absolute right-2 top-2 rounded-full bg-[var(--color-hot-main)] px-2 py-0.5 text-xs font-black tracking-[0.06em] text-white shadow-[0_4px_10px_rgba(255,77,0,0.4)]">
                                     HOT
                                 </span>
                             )}

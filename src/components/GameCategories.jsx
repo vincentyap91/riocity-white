@@ -22,20 +22,20 @@ export default function GameCategories() {
         <section className="w-full pt-4">
             <SectionHeader
                 title="Popular Games"
-                icon={<Crown size={22} fill="currentColor" className="text-[#0072BC]" />}
+                icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
             />
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 pt-6">
                 {categories.map((cat, idx) => (
                     <div
                         key={idx}
-                        className="flex flex-col relative rounded-[15px] bg-[#E5F6FF] p-1.5 shadow-[0_5px_15px_rgba(0,174,239,0.1)] group hover:-translate-y-1 transition-transform border border-white"
+                        className="group relative flex flex-col rounded-[15px] border border-white bg-[var(--color-brand-soft)] p-1.5 shadow-[0_5px_15px_rgba(0,174,239,0.1)] transition-transform hover:-translate-y-1"
                     >
                         {/* Title Ribbon - overlaps top edge */}
                         <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 w-[86%]">
                             <div className="relative w-full">
-                                <div className="absolute inset-x-2 -bottom-1.5 h-2 rounded-full bg-[#0072BC]/35 blur-sm"></div>
-                                <div className="relative overflow-hidden rounded-[10px] border border-[#8ce6ff] bg-gradient-to-r from-[#008ed6] via-[#00aef0] to-[#00bdf9] px-2 py-1.5 shadow-[0_8px_14px_rgba(0,114,188,0.35)]">
+                                <div className="absolute inset-x-2 -bottom-1.5 h-2 rounded-full bg-[rgb(0_114_188_/_0.35)] blur-sm"></div>
+                                <div className="relative overflow-hidden rounded-[10px] border border-[rgb(140_230_255)] bg-[linear-gradient(90deg,var(--color-brand-secondary)_0%,var(--color-brand-primary)_55%,#00bdf9_100%)] px-2 py-1.5 shadow-[0_8px_14px_rgba(0,114,188,0.35)]">
                                     <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.4),rgba(255,255,255,0)_45%)]"></div>
                                     <span className="relative block text-center text-white text-xs uppercase font-extrabold tracking-[0.14em] drop-shadow-[0_1px_2px_rgba(0,0,0,0.45)]">
                                         {cat.name}

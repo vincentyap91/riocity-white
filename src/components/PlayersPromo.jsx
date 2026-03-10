@@ -5,14 +5,14 @@ export default function PlayersPromo() {
     return (
         <section className="w-full flex flex-col md:flex-row gap-6 mt-4">
             {/* Left Column */}
-            <div className="w-full md:w-1/2 bg-gradient-to-br from-[#eff8fd] to-[#d6effd] rounded-[30px] p-6 shadow-sm border border-white relative flex flex-col justify-end min-h-[250px]">
+            <div className="relative flex min-h-[250px] w-full flex-col justify-end rounded-[30px] border border-white bg-[linear-gradient(135deg,#eff8fd_0%,#d6effd_100%)] p-6 shadow-sm md:w-1/2">
                 {/* Logo and Trophy */}
                 <div className="absolute top-6 left-6 z-10">
-                    <h2 className="text-[#00AEEF] text-2xl font-black italic mb-2 tracking-wider drop-shadow-sm">LOGO</h2>
+                    <h2 className="mb-2 text-2xl font-black italic tracking-wider text-[var(--color-brand-primary)] drop-shadow-sm">LOGO</h2>
                     <div className="bg-gradient-to-r from-yellow-300 to-yellow-500 rounded-full p-2 w-10 h-10 flex items-center justify-center shadow-md mb-2">
                         <span className="text-lg leading-none">🏆</span>
                     </div>
-                    <div className="text-xs text-[#0072BC] leading-snug max-w-[180px]">
+                    <div className="max-w-[180px] text-xs leading-snug text-[var(--color-brand-secondary)]">
                         <p className="mb-2"><span className="font-bold">Lionel Messi</span> : Won the<br />FIFA World Cup in 2022</p>
                         <p><span className="font-bold">Erling Haaland</span> : Won the treble<br />with Manchester City</p>
                     </div>
