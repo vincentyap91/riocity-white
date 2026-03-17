@@ -59,9 +59,9 @@ const BadgeSVG = () => (
             </radialGradient>
         </defs>
         <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bd1)" stroke="rgba(255,255,255,0.35)" strokeWidth="2" />
-        <text x="32" y="31" textAnchor="middle" fill="white" fontSize="18" fontWeight="900" fontFamily="Arial, sans-serif">13</text>
+        <text x="32" y="31" textAnchor="middle" fill="white" fontSize="18" fontWeight="900" style={{ fontFamily: 'var(--font-family-sans)' }}>13</text>
         <line x1="14" y1="37" x2="50" y2="37" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" />
-        <text x="32" y="50" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="9" fontWeight="700" fontFamily="Arial, sans-serif">BONUS</text>
+        <text x="32" y="50" textAnchor="middle" fill="rgba(255,255,255,0.85)" fontSize="9" fontWeight="700" style={{ fontFamily: 'var(--font-family-sans)' }}>BONUS</text>
         <ellipse cx="22" cy="14" rx="9" ry="4" fill="rgba(255,255,255,0.22)" transform="rotate(-15 22 14)" />
     </svg>
 );

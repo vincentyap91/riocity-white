@@ -17,6 +17,7 @@ import FishingPage from './components/FishingPage';
 import PokerPage from './components/PokerPage';
 import PromotionPage from './components/PromotionPage';
 import VipPage from './components/VipPage';
+import AffiliatePage from './components/AffiliatePage';
 import ProfilePage from './components/ProfilePage';
 import AccountLayout from './components/AccountLayout';
 import RegisterPage from './components/RegisterPage';
@@ -25,6 +26,8 @@ import FavouritesPage from './components/FavouritesPage';
 import MyBetsPage from './components/MyBetsPage';
 import FeedbackPage from './components/FeedbackPage';
 import HelpCenterPage from './components/HelpCenterPage';
+import SecurityPage from './components/SecurityPage';
+import NotificationsPage from './components/NotificationsPage';
 import Footer from './components/Footer';
 import FloatingSocials from './components/FloatingSocials';
 import LoginModal from './components/LoginModal';
@@ -60,6 +63,9 @@ function resolvePageFromPath() {
   if (pathname === '/vip') {
     return 'vip';
   }
+  if (pathname === '/affiliate') {
+    return 'affiliate';
+  }
   if (pathname === '/register') {
     return 'register';
   }
@@ -81,6 +87,12 @@ function resolvePageFromPath() {
   if (pathname === '/help' || pathname === '/help-center') {
     return 'help-center';
   }
+  if (pathname === '/security') {
+    return 'security';
+  }
+  if (pathname === '/notifications') {
+    return 'notifications';
+  }
   if (pathname === '/bet-slip') {
     return 'my-bets';
   }
@@ -99,7 +111,9 @@ function App() {
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  const handleNavigate = (targetPage) => {
+    const handleNavigate = (targetPage) => {
+      const settingsToProfile = { security: 'security', notifications: 'notifications' };
+      const resolvedPage = settingsToProfile[targetPage] ?? targetPage;
     const pathByPage = {
       home: '/',
       'live-casino': '/casino',
@@ -111,6 +125,7 @@ function App() {
       poker: '/poker',
       promotion: '/promotion',
       vip: '/vip',
+      affiliate: '/affiliate',
       register: '/register',
       profile: '/profile',
       verification: '/verification',
@@ -118,9 +133,11 @@ function App() {
       'my-bets': '/my-bets',
       feedback: '/feedback',
       'help-center': '/help',
+      security: '/security',
+      notifications: '/notifications',
     };
-    const nextPath = pathByPage[targetPage] ?? '/';
-    setPage(targetPage);
+    const nextPath = pathByPage[resolvedPage] ?? pathByPage[targetPage] ?? '/';
+    setPage(resolvedPage);
 
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, '', nextPath);
@@ -151,7 +168,9 @@ function App() {
               ? 'bg-[var(--color-page-default)]'
             : page === 'vip'
               ? 'bg-[var(--color-page-default)]'
-            : page === 'profile' || page === 'verification' || page === 'favourites' || page === 'my-bets' || page === 'feedback' || page === 'help-center'
+            : page === 'affiliate'
+              ? 'bg-[var(--color-page-default)]'
+            : page === 'profile' || page === 'verification' || page === 'favourites' || page === 'my-bets' || page === 'feedback' || page === 'help-center' || page === 'security' || page === 'notifications'
               ? 'bg-[var(--color-page-account)]'
               : 'bg-[var(--color-page-default)]'
     }`}>
@@ -207,6 +226,8 @@ function App() {
         <PromotionPage />
       ) : page === 'vip' ? (
         <VipPage />
+      ) : page === 'affiliate' ? (
+        <AffiliatePage />
       ) : page === 'profile' ? (
         <ProfilePage authUser={authUser} onLogout={() => setAuthUser(null)} onNavigate={handleNavigate} onLiveChatClick={() => setLiveChatOpen(true)} />
       ) : page === 'verification' ? (
@@ -229,6 +250,14 @@ function App() {
         <AccountLayout activePage="help-center" authUser={authUser} onNavigate={handleNavigate} onLogout={() => setAuthUser(null)} onLiveChatClick={() => setLiveChatOpen(true)}>
           <HelpCenterPage />
         </AccountLayout>
+      ) : page === 'security' ? (
+        <AccountLayout activePage="security" authUser={authUser} onNavigate={handleNavigate} onLogout={() => setAuthUser(null)} onLiveChatClick={() => setLiveChatOpen(true)}>
+          <SecurityPage />
+        </AccountLayout>
+      ) : page === 'notifications' ? (
+        <AccountLayout activePage="notifications" authUser={authUser} onNavigate={handleNavigate} onLogout={() => setAuthUser(null)} onLiveChatClick={() => setLiveChatOpen(true)}>
+          <NotificationsPage />
+        </AccountLayout>
       ) : (
         <RegisterPage onLoginClick={() => setLoginModalOpen(true)} />
       )}
@@ -240,12 +269,11 @@ function App() {
         open={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
         logoText="LOGO"
-        onLogin={(username) => {
-          setAuthUser({
-            name: username || 'vincentzo',
-            balance: 'MYR 0.00',
-            notifications: 1,
-          });
+        onLogin={(userOrUsername) => {
+          const user = typeof userOrUsername === 'object' && userOrUsername?.name
+            ? userOrUsername
+            : { name: userOrUsername || 'vincentzo', balance: 'MYR 0.00', notifications: 1, vipLevel: 'Diamond' };
+          setAuthUser(user);
           setLoginModalOpen(false);
         }}
         onRegisterClick={() => {

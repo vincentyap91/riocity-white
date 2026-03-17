@@ -1,38 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import { Lock, Send, UserRound, X } from 'lucide-react';
+import TwoFactorLoginModal from './TwoFactorLoginModal';
+import { verifyLogin, verify2FALogin } from '../services/authService';
 
 export default function LoginModal({ open, onClose, logoText = 'LOGO', onRegisterClick, onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [show2FA, setShow2FA] = useState(false);
+    const [sessionId, setSessionId] = useState(null);
+    const [loginError, setLoginError] = useState('');
+    const [loginLoading, setLoginLoading] = useState(false);
 
     useEffect(() => {
         if (!open) {
-            return undefined;
+            setShow2FA(false);
+            setSessionId(null);
+            setLoginError('');
         }
+    }, [open]);
 
+    useEffect(() => {
+        if (!open) return undefined;
         const handleEscape = (event) => {
             if (event.key === 'Escape') {
-                onClose?.();
+                if (show2FA) setShow2FA(false);
+                else onClose?.();
             }
         };
-
         const previousOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         window.addEventListener('keydown', handleEscape);
-
         return () => {
             document.body.style.overflow = previousOverflow;
             window.removeEventListener('keydown', handleEscape);
         };
-    }, [open, onClose]);
+    }, [open, onClose, show2FA]);
 
-    if (!open) {
-        return null;
-    }
+    if (!open) return null;
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        onLogin?.(username.trim());
+        setLoginError('');
+        setLoginLoading(true);
+        try {
+            const result = await verifyLogin(username.trim(), password);
+            if (!result.success) {
+                setLoginError(result.error || 'Login failed');
+                return;
+            }
+            if (result.requires2FA && result.sessionId) {
+                setSessionId(result.sessionId);
+                setShow2FA(true);
+            } else {
+                onLogin?.(result.username || username.trim());
+                onClose?.();
+            }
+        } finally {
+            setLoginLoading(false);
+        }
+    };
+
+    const handle2FASuccess = (user) => {
+        onLogin?.(user);
+        onClose?.();
+    };
+
+    const handle2FAClose = () => {
+        setShow2FA(false);
+        setSessionId(null);
     };
 
     return (
@@ -92,6 +127,9 @@ export default function LoginModal({ open, onClose, logoText = 'LOGO', onRegiste
                                 autoComplete="current-password"
                             />
                         </label>
+                        {loginError && (
+                            <p className="mt-2 text-sm font-medium text-[var(--color-danger-main)]">{loginError}</p>
+                        )}
                         <div className="mt-2 flex items-center justify-between gap-3">
                             <button type="button" className="text-sm sm:text-base font-semibold text-[rgb(53_91_143)] hover:underline">
                                 Forgot Password?
@@ -99,13 +137,21 @@ export default function LoginModal({ open, onClose, logoText = 'LOGO', onRegiste
 
                             <button
                                 type="submit"
-                                className="btn-theme-auth h-10 min-w-[100px] rounded-md px-5 text-sm sm:text-base font-bold tracking-[0.03em] transition hover:brightness-105"
+                                disabled={loginLoading}
+                                className="btn-theme-auth h-10 min-w-[100px] rounded-md px-5 text-sm sm:text-base font-bold tracking-[0.03em] transition hover:brightness-105 disabled:opacity-70"
                             >
-                                LOGIN
+                                {loginLoading ? 'Logging in...' : 'LOGIN'}
                             </button>
                         </div>
                     </div>
                 </form>
+
+                <TwoFactorLoginModal
+                    open={show2FA}
+                    onClose={handle2FAClose}
+                    onSuccess={handle2FASuccess}
+                    verifyCode={(code, trustDevice) => verify2FALogin(sessionId, code, trustDevice)}
+                />
 
                 <div className="mx-auto mt-7 flex w-full max-w-[420px] items-center gap-4 text-base sm:text-lg font-medium text-[var(--color-text-muted)]">
                     <div className="h-px flex-1 bg-[rgb(171_204_235)]" />

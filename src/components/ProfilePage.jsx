@@ -9,6 +9,7 @@ import {
     UserCircle2,
 } from 'lucide-react';
 import AccountLayout from './AccountLayout';
+import VipStatusPill from './VipStatusPill';
 
 const personalFields = [
     { key: 'username', label: 'Username' },
@@ -95,6 +96,7 @@ function SectionCard({ title, description, editing, onToggleEdit, children, acti
 }
 
 export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChatClick }) {
+    const vipLevel = authUser?.vipLevel || 'Diamond';
     const [editing, setEditing] = useState({
         personal: false,
         contact: false,
@@ -103,16 +105,16 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
     const [showBankForm, setShowBankForm] = useState(false);
     const [formValues, setFormValues] = useState({
         username: authUser?.name || 'vincentzo',
-        fullName: 'Vincent Yap',
+        fullName: 'Vincentzo',
         referralCode: 'Zy4REBcM',
         referralLink: 'https://riocity.com/register?code=Zy4REBcM',
-        rank: 'Iron',
+        rank: vipLevel,
         birthday: '08/01/2026',
         gender: 'Male',
         email: 'vincentzo@gmail.com',
         phone: '60 123456701',
         bankName: 'Maybank',
-        accountHolder: 'Vincent Yap',
+        accountHolder: 'Vincentzo',
         accountNumber: '1122 3344 5566',
         branchName: 'Kuala Lumpur Main Branch'
     });
@@ -138,36 +140,42 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
                 <h1 className="page-title">Account Details</h1>
 
                 <div className="mt-8 space-y-6">
-                    <div className="surface-card flex flex-col gap-5 rounded-2xl p-6 md:flex-row md:items-center md:p-8">
-                        <div className="relative shrink-0">
-                            <div className="blue-accent-avatar flex h-20 w-20 items-center justify-center rounded-full md:h-24 md:w-24">
-                                <UserCircle2 size={48} className="text-[var(--color-accent-600)]" />
+                    <div className="surface-card flex flex-col gap-5 rounded-2xl p-6 md:flex-row md:items-center md:justify-between md:gap-6 md:p-8">
+                        <div className="flex flex-col gap-5 md:flex-row md:items-center md:min-w-0 md:flex-1">
+                            <div className="relative shrink-0">
+                                <div className="blue-accent-avatar flex h-20 w-20 items-center justify-center rounded-full md:h-24 md:w-24">
+                                    <UserCircle2 size={48} className="text-[var(--color-accent-600)]" />
+                                </div>
+                                <button
+                                    type="button"
+                                    className="absolute bottom-0 right-0 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-accent-100)] bg-[var(--color-surface-base)] text-[var(--color-accent-600)] shadow-sm transition hover:scale-105 hover:bg-[var(--color-accent-50)]"
+                                    aria-label="Edit profile image"
+                                >
+                                    <PencilLine size={14} />
+                                </button>
                             </div>
-                            <button
-                                type="button"
-                                className="absolute bottom-0 right-0 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-accent-100)] bg-[var(--color-surface-base)] text-[var(--color-accent-600)] shadow-sm transition hover:scale-105 hover:bg-[var(--color-accent-50)]"
-                                aria-label="Edit profile image"
-                            >
-                                <PencilLine size={14} />
-                            </button>
+
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-600)]">
+                                    Verified Account Profile
+                                </p>
+                                <h2 className="mt-2 truncate text-2xl font-bold tracking-tight text-[var(--color-text-strong)] md:text-3xl">
+                                    {formValues.username}
+                                </h2>
+                                <p className="mt-2 text-sm font-medium text-[var(--color-text-muted)]">{formValues.email}</p>
+                                <div className="mt-4 flex flex-wrap items-center gap-2">
+                                    <span className="inline-flex rounded-full border border-[var(--color-accent-100)] bg-[var(--color-accent-50)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-700)]">
+                                        Joined 08/01/2026
+                                    </span>
+                                    <span className="inline-flex rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-muted)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                                        Player ID 679129
+                                    </span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div className="min-w-0 flex-1">
-                            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-600)]">
-                                Verified Account Profile
-                            </p>
-                            <h2 className="mt-2 truncate text-2xl font-bold tracking-tight text-[var(--color-text-strong)] md:text-3xl">
-                                {formValues.username}
-                            </h2>
-                            <p className="mt-2 text-sm font-medium text-[var(--color-text-muted)]">{formValues.email}</p>
-                            <div className="mt-4 flex flex-wrap items-center gap-2">
-                                <span className="inline-flex rounded-full border border-[var(--color-accent-100)] bg-[var(--color-accent-50)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-700)]">
-                                    Joined 08/01/2026
-                                </span>
-                                <span className="inline-flex rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-muted)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-                                    Player ID 679129
-                                </span>
-                            </div>
+                        <div className="flex justify-center md:justify-end md:shrink-0 md:self-center md:ml-4">
+                            <VipStatusPill level={vipLevel} size="large" layout="column" />
                         </div>
                     </div>
 
@@ -257,7 +265,7 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
                                     ))}
                                 </div>
                             ) : (
-                                <div className="flex min-h-[240px] flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--color-accent-200)] bg-[var(--color-accent-50)] px-6 text-center">
+                                <div className="flex min-h-[240px] flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--color-accent-200)] bg-[var(--color-accent-50)] p-6 text-center">
                                     <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-surface-base)] text-[var(--color-accent-600)] shadow-[var(--shadow-accent-avatar)]">
                                         <Landmark size={28} />
                                     </div>

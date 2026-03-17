@@ -14,6 +14,8 @@ import {
     UserRound,
 } from 'lucide-react';
 import { supportOptions } from '../constants/supportOptions';
+import { settingsOptions } from '../constants/settingsOptions';
+import VipStatusPill from './VipStatusPill';
 
 const accountLinks = [
     { id: 'profile', label: 'Account Details', icon: UserRound },
@@ -31,6 +33,7 @@ export default function AccountSidebar({
     sidebarCollapsed: controlledCollapsed,
     onSidebarCollapsedChange,
 }) {
+    const vipLevel = authUser?.vipLevel || 'Diamond';
     const [internalCollapsed, setInternalCollapsed] = useState(false);
     const [openMenus, setOpenMenus] = useState({
         account: true,
@@ -44,6 +47,9 @@ export default function AccountSidebar({
     useEffect(() => {
         if (activePage === 'feedback' || activePage === 'help-center') {
             setOpenMenus((m) => ({ ...m, support: true }));
+        }
+        if (activePage === 'security' || activePage === 'notifications') {
+            setOpenMenus((m) => ({ ...m, settings: true }));
         }
     }, [activePage]);
 
@@ -104,9 +110,7 @@ export default function AccountSidebar({
                                     <p>Joined: 08/01/2026</p>
                                     <p>Player ID: 679129</p>
                                 </div>
-                                <div className="mt-3 inline-flex rounded-full border border-[var(--color-accent-200)] bg-[var(--color-accent-50)] px-3 py-1 text-xs font-semibold tracking-[0.08em] text-[var(--color-accent-700)]">
-                                    Iron
-                                </div>
+                                <VipStatusPill level={vipLevel} className="mt-3" />
                             </div>
                         )}
                     </div>
@@ -217,9 +221,24 @@ export default function AccountSidebar({
                         </button>
                         {openMenus.settings && !sidebarCollapsed && (
                             <div className="mt-4 space-y-1 overflow-hidden rounded-xl bg-[var(--color-surface-base)] p-1">
-                                <div className="flex min-h-[48px] w-full items-center gap-3 rounded-xl border-l-4 border-l-transparent bg-[var(--color-surface-base)] px-4 py-3.5 text-left text-[var(--color-text-muted)]">
-                                    <span className="text-base font-normal">Preferences, security and notification controls.</span>
-                                </div>
+                                {settingsOptions.map(({ id, label, icon: Icon }) => {
+                                    const isActive = activePage === id;
+                                    return (
+                                        <button
+                                            key={id}
+                                            type="button"
+                                            onClick={() => onNavigate?.(id)}
+                                            className={`group flex min-h-[48px] w-full items-center gap-3 rounded-xl border-l-4 px-4 py-3.5 text-left transition-all hover:scale-[1.02] ${
+                                                isActive
+                                                    ? 'border-l-[var(--color-accent-500)] bg-[var(--color-accent-50)] text-[var(--color-accent-700)]'
+                                                    : 'border-l-transparent bg-[var(--color-surface-base)] text-[var(--color-text-muted)] hover:border-l-[var(--color-accent-500)] hover:bg-[var(--color-accent-50)] hover:text-[var(--color-accent-700)]'
+                                            }`}
+                                        >
+                                            <Icon size={18} className={`${isActive ? 'text-[var(--color-accent-600)]' : 'text-[var(--color-text-soft)] group-hover:text-[var(--color-accent-500)]'}`} />
+                                            <span className="text-base font-normal">{label}</span>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

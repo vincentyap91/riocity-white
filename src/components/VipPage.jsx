@@ -22,6 +22,49 @@ const vipLevels = [
     { tier: 'Diamond', medal: diamondMedal, monthlyReload: '$1,000,000', annualReward: '$1,200,000', depositPoint: '$100,000', validBetPoint: '$1,500,000' },
 ];
 
+const vipTierComparisonTiers = [
+    { tier: 'Normal', medal: normalMedal },
+    { tier: 'Silver', medal: silverMedal },
+    { tier: 'Gold', medal: goldMedal },
+    { tier: 'Platinum', medal: platinumMedal },
+    { tier: 'Diamond', medal: diamondMedal },
+];
+
+const vipTierComparisonSections = [
+    {
+        header: 'Upgrade & Maintenance Requirement',
+        rows: [
+            { label: 'Deposit Requirement (One Month)', values: ['First Deposit', '$300,000', '$800,000', '$1,800,000', '$5,000,000'] },
+            { label: 'Maintenance Requirement (One Month)', values: ['N/A', '$200,000', '$500,000', '$1,300,000', '$2,500,000'] },
+            { label: 'Membership Renewal', values: ['Lifetime', 'Monthly', 'Monthly', 'Monthly', 'Monthly'] },
+        ],
+    },
+    {
+        header: 'Daily Rollover Rebate',
+        rows: [
+            { label: 'Sportsbook', values: ['0.60%', '0.70%', '0.80%', '1%', '1.25%'] },
+            { label: 'Live Casino', values: ['0.65%', '0.75%', '0.85%', '1.05%', '1.35%'] },
+            { label: 'Slot Games', values: ['0.55%', '0.65%', '0.75%', '0.95%', '1.15%'] },
+        ],
+    },
+    {
+        header: 'Gifts & Treats',
+        rows: [
+            { label: 'Tier Upgrade Bonus', values: ['N/A', '$888', '$1,888', '$2,888', '$8,888'] },
+            { label: 'Weekly Cash Rebate', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
+            { label: 'Birthday Bonus', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
+        ],
+    },
+    {
+        header: 'Service Support',
+        rows: [
+            { label: 'Daily Withdrawal Limit', values: ['3 Times', '3 Times', '4 Times', '5 Times', '8 Times'] },
+            { label: 'VIP Privilege Customer Service', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
+            { label: 'Deposit and Withdrawal Prioritization', values: ['N/A', 'Standard', 'Standard', 'High Priority', 'Highest Priority'] },
+        ],
+    },
+];
+
 const privilegeCards = [
     {
         title: 'Priority Withdrawals',
@@ -97,64 +140,91 @@ function UpgradeContent() {
 
             <div className="surface-card overflow-hidden rounded-2xl">
                 <div className="border-b border-[rgb(219_228_243)] px-4 py-4 md:px-5">
-                    <h3 className="text-lg font-extrabold text-[rgb(28_40_65)] md:text-xl">How to Become Our VIP?</h3>
+                    <h3 className="text-lg font-extrabold text-[rgb(28_40_65)] md:text-xl">VIP Loyalty Tiers</h3>
                     <p className="mt-1 text-sm text-[rgb(93_103_128)]">
-                        Move through each level by increasing your qualifying deposits and valid bets.
+                        Compare benefits across tiers. Move through each level by increasing your qualifying deposits and valid bets.
                     </p>
                 </div>
 
-                <div className="hidden md:block">
-                    <div className="grid grid-cols-5 bg-[linear-gradient(180deg,#1c63b9_0%,#0f4f9f_100%)] text-center text-xs font-black uppercase tracking-[0.08em] text-white">
-                        <div className="border-r border-[rgb(113_154_210)] px-4 py-4">VIP Level</div>
-                        <div className="border-r border-[rgb(113_154_210)] px-4 py-4">Monthly Reload</div>
-                        <div className="border-r border-[rgb(113_154_210)] px-4 py-4">Annual Reward</div>
-                        <div className="border-r border-[rgb(113_154_210)] px-4 py-4">Deposit Point</div>
-                        <div className="px-4 py-4">Valid Bet Point</div>
-                    </div>
-
-                    {vipLevels.map((level, index) => (
-                        <div
-                            key={level.tier}
-                            className={`grid grid-cols-5 text-center text-sm font-semibold text-[rgb(42_58_88)] ${
-                                index % 2 === 0 ? 'bg-[rgb(248_251_255)]' : 'bg-[rgb(240_246_255)]'
-                            }`}
-                        >
-                            <div className="flex items-center justify-center gap-2 border-r border-t border-[rgb(219_228_243)] px-4 py-4">
-                                <VipMedal src={level.medal} alt={`${level.tier} medal`} className="h-10 w-10 shrink-0 md:h-11 md:w-11" />
-                                <span>{level.tier}</span>
-                            </div>
-                            <div className="border-r border-t border-[rgb(219_228_243)] px-4 py-4">{level.monthlyReload}</div>
-                            <div className="border-r border-t border-[rgb(219_228_243)] px-4 py-4">{level.annualReward}</div>
-                            <div className="border-r border-t border-[rgb(219_228_243)] px-4 py-4">{level.depositPoint}</div>
-                            <div className="border-t border-[rgb(219_228_243)] px-4 py-4">{level.validBetPoint}</div>
-                        </div>
-                    ))}
+                <div className="hidden overflow-x-auto md:block">
+                    <table className="w-full min-w-[640px] border-collapse text-sm">
+                        <thead>
+                            <tr>
+                                <th className="w-[1%] border-b border-white/20 bg-[#1c63b9] px-4 py-3" aria-hidden>
+                                </th>
+                                {vipTierComparisonTiers.map((t) => (
+                                    <th
+                                        key={t.tier}
+                                        className="min-w-[110px] border-b border-white/20 bg-[#1c63b9] px-4 py-5 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]"
+                                    >
+                                        <div className="flex flex-col items-center gap-3">
+                                            <VipMedal src={t.medal} alt={`${t.tier} medal`} className="h-11 w-11 shrink-0 md:h-12 md:w-12" />
+                                            <span className="font-bold uppercase tracking-[0.08em] text-white drop-shadow-sm">{t.tier}</span>
+                                        </div>
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {vipTierComparisonSections.map((section) => (
+                                <React.Fragment key={section.header}>
+                                    <tr>
+                                        <td
+                                            colSpan={6}
+                                            className="border-b border-[rgb(226_232_240)] bg-[rgb(241_245_252)] px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[rgb(28_40_65)]"
+                                        >
+                                            {section.header}
+                                        </td>
+                                    </tr>
+                                    {section.rows.map((row, rowIdx) => (
+                                        <tr
+                                            key={row.label}
+                                            className={rowIdx % 2 === 0 ? 'bg-white' : 'bg-[rgb(248_251_255)]'}
+                                        >
+                                            <td className="border-b border-r border-[rgb(226_232_240)] px-4 py-3 font-normal text-[rgb(51_65_85)]">
+                                                {row.label}
+                                            </td>
+                                            {row.values.map((val, colIdx) => (
+                                                <td
+                                                    key={colIdx}
+                                                    className="border-b border-[rgb(226_232_240)] px-4 py-3 text-center font-normal text-[rgb(51_65_85)]"
+                                                >
+                                                    {val}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </React.Fragment>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
 
-                <div className="space-y-3 p-4 md:hidden">
-                    {vipLevels.map((level) => (
-                        <div key={level.tier} className="surface-card rounded-xl p-4">
-                            <div className="flex items-center gap-3 text-[rgb(28_40_65)]">
-                                <VipMedal src={level.medal} alt={`${level.tier} medal`} className="h-11 w-11 shrink-0 sm:h-12 sm:w-12" />
-                                <h4 className="text-base font-extrabold">{level.tier}</h4>
+                <div className="space-y-4 p-4 md:hidden">
+                    {vipTierComparisonTiers.map((t) => (
+                        <div key={t.tier} className="surface-card rounded-xl overflow-hidden">
+                            <div className="flex items-center gap-3 border-b border-[rgb(226_232_240)] bg-[#1c63b9] px-4 py-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]">
+                                <VipMedal src={t.medal} alt={`${t.tier} medal`} className="h-11 w-11 shrink-0" />
+                                <span className="font-bold uppercase tracking-[0.08em] text-white drop-shadow-sm">{t.tier}</span>
                             </div>
-                            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                                <div className="rounded-lg bg-white p-3 text-[rgb(42_58_88)] shadow-[0_4px_12px_rgba(15,23,42,0.04)]">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[rgb(100_116_139)]">Monthly Reload</p>
-                                    <p className="mt-1 font-semibold">{level.monthlyReload}</p>
-                                </div>
-                                <div className="rounded-lg bg-white p-3 text-[rgb(42_58_88)] shadow-[0_4px_12px_rgba(15,23,42,0.04)]">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[rgb(100_116_139)]">Annual Reward</p>
-                                    <p className="mt-1 font-semibold">{level.annualReward}</p>
-                                </div>
-                                <div className="rounded-lg bg-white p-3 text-[rgb(42_58_88)] shadow-[0_4px_12px_rgba(15,23,42,0.04)]">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[rgb(100_116_139)]">Deposit Point</p>
-                                    <p className="mt-1 font-semibold">{level.depositPoint}</p>
-                                </div>
-                                <div className="rounded-lg bg-white p-3 text-[rgb(42_58_88)] shadow-[0_4px_12px_rgba(15,23,42,0.04)]">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.08em] text-[rgb(100_116_139)]">Valid Bet Point</p>
-                                    <p className="mt-1 font-semibold">{level.validBetPoint}</p>
-                                </div>
+                            <div className="divide-y divide-[rgb(226_232_240)] p-4">
+                                {vipTierComparisonSections.map((section) => (
+                                    <div key={section.header} className="py-3 first:pt-0 last:pb-0">
+                                        <p className="text-xs font-bold uppercase tracking-[0.1em] text-[rgb(28_40_65)]">
+                                            {section.header}
+                                        </p>
+                                        <div className="mt-2 space-y-2">
+                                            {section.rows.map((row) => (
+                                                <div key={row.label} className="flex justify-between gap-4 text-sm">
+                                                    <span className="font-normal text-[rgb(51_65_85)]">{row.label}</span>
+                                                    <span className="shrink-0 font-normal text-[rgb(51_65_85)]">
+                                                        {row.values[vipTierComparisonTiers.findIndex((x) => x.tier === t.tier)]}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     ))}
@@ -241,10 +311,15 @@ export default function VipPage() {
                         />
                         <div className="absolute inset-y-0 right-0 flex w-full items-center justify-start md:w-[52%]">
                             <div className="w-full max-w-[520px] px-4 py-4 text-center md:px-8 md:py-7">
-                                <h1 className="text-base font-black uppercase tracking-[0.03em] text-[rgb(25_41_71)] md:text-2xl">
+                                <h1
+                                    className="bg-gradient-to-br from-[#FFE082] via-[#FFC107] to-[#E6A800] bg-clip-text text-2xl font-black uppercase tracking-[0.12em] text-transparent md:text-3xl"
+                                    style={{
+                                        textShadow: '0 1px 0 rgba(255,255,255,0.5), 0 2px 6px rgba(0,0,0,0.3), 0 4px 16px rgba(230,168,0,0.25)',
+                                    }}
+                                >
                                     VIP Programme
                                 </h1>
-                                <p className="mx-auto mt-3 max-w-[420px] text-sm font-semibold leading-[1.35] text-[rgb(25_41_71)] md:mt-4 md:text-lg">
+                                <p className="mx-auto mt-4 max-w-[420px] text-base font-medium leading-[1.5] text-[rgb(15_23_42)] md:mt-5 md:text-base md:leading-[1.45]">
                                     Unlock premium rewards, tailored bonuses, and priority support with every VIP tier.
                                 </p>
                                 <a
@@ -280,7 +355,7 @@ export default function VipPage() {
                             <Crown size={14} className="text-[var(--color-nav-gold)]" />
                             VIP Group
                         </span>
-                        <h1 className="mt-4 text-2xl font-black tracking-tight text-[var(--color-text-strong)] md:text-3xl">
+                        <h1 className="mt-4 text-2xl font-semibold tracking-tight text-[var(--color-text-strong)] md:text-3xl">
                             Premium rewards for our most active members
                         </h1>
                         <p className="mt-3 max-w-[760px] text-sm leading-relaxed text-[var(--color-text-muted)] md:text-base">

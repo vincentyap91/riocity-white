@@ -14,8 +14,11 @@ import {
 } from 'lucide-react';
 import LiveCasinoMenu from './LiveCasinoMenu';
 import { supportOptions } from '../constants/supportOptions';
+import { settingsOptions } from '../constants/settingsOptions';
+import VipStatusPill from './VipStatusPill';
 
 export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, onRegisterClick, authUser, onLogout, onAccountDetailsClick, onLiveChatClick, onCasinoProviderSelect }) {
+    const vipLevel = authUser?.vipLevel || 'Diamond';
     const [casinoMenuOpen, setCasinoMenuOpen] = useState(false);
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
     const [openProfileSection, setOpenProfileSection] = useState('account');
@@ -64,9 +67,13 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                     <a href="#" className="flex h-full items-center gap-1 border-r border-[var(--color-brand-primary)] px-2 hover:text-white/80">
                         <span className="text-sm">Mobile</span>
                     </a>
-                    <a href="#" className="flex items-center gap-1 hover:text-white/80 h-full">
-                        <span className="text-sm">Affiliate</span>
-                    </a>
+                    <button
+                        type="button"
+                        onClick={() => onNavigate?.('affiliate')}
+                        className="flex h-full items-center gap-1 px-2 text-left hover:text-white/80"
+                    >
+                        <span className="text-sm">Referral</span>
+                    </button>
                 </div>
 
                 <div className="flex items-center gap-2 h-full py-1">
@@ -82,11 +89,12 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             <button
                                 type="button"
                                 onClick={() => setProfileMenuOpen((open) => !open)}
-                                className="flex h-7 items-center gap-1.5 rounded-[9px] px-2 text-white transition hover:bg-white/10"
+                                className="flex h-7 items-center gap-1.5 rounded-[9px] px-0 text-white transition hover:bg-white/10"
                                 aria-haspopup="menu"
                                 aria-expanded={profileMenuOpen}
                             >
-                                <span className="font-bold text-[rgb(255_240_160)]">{authUser.name}</span>
+                                <span className="font-bold text-[rgb(255_240_160)] xl:hidden">{authUser.name}</span>
+                                <VipStatusPill level={vipLevel} theme="dark" size="header" username={authUser.name} className="hidden xl:inline-flex" />
                                 <div className="relative">
                                     <UserCircle2 size={20} className="text-white/90" />
                                     {authUser.notifications > 0 && (
@@ -125,7 +133,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             </div>
 
                             {profileMenuOpen && (
-                                <div className="dark-nav-shell absolute right-15 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[22px] p-4 text-white">
+                                <div className="dark-nav-shell absolute right-25 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[22px] p-4 text-white">
                                     <div className="absolute inset-x-0 top-0 h-20 bg-[radial-gradient(circle_at_top,#29bbff55_0%,transparent_72%)] pointer-events-none" />
 
                                     <div className="relative flex items-start gap-3">
@@ -156,9 +164,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                                     <span className="font-semibold">679129</span>
                                                 </p>
                                             </div>
-                                            <div className="mt-2 inline-flex items-center rounded-full border border-[rgb(61_125_203)] bg-[linear-gradient(180deg,#143567_0%,#0e2547_100%)] px-2.5 py-1 text-xs font-bold text-[rgb(219_234_255)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                                                Iron
-                                            </div>
+                                            <VipStatusPill level={vipLevel} theme="dark" className="mt-2" />
                                         </div>
                                     </div>
 
@@ -260,8 +266,21 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                             />
                                         </button>
                                         {openProfileSection === 'settings' && (
-                                            <div className="mt-3 rounded-[14px] border border-[var(--color-nav-tile-border)] bg-[linear-gradient(180deg,#092c5a_0%,#041c3b_100%)] px-3 py-3 text-sm text-[var(--color-nav-text-soft)] shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                                                Preferences, security and notification controls.
+                                            <div className="mt-3 grid grid-cols-2 gap-2">
+                                                {settingsOptions.map(({ id, label, icon: Icon }) => (
+                                                    <button
+                                                        key={id}
+                                                        type="button"
+                                                        onClick={() => {
+                                                            onNavigate?.(id);
+                                                            setProfileMenuOpen(false);
+                                                        }}
+                                                        className="dark-nav-tile group flex min-h-[64px] flex-col items-center justify-center rounded-[14px] px-2 text-center transition hover:-translate-y-0.5 hover:border-[var(--color-nav-tile-border-hover)] hover:shadow-[var(--shadow-nav-tile-hover)]"
+                                                    >
+                                                        <Icon size={18} className="mb-1.5 text-[var(--color-nav-blue-icon)] group-hover:text-[var(--color-nav-blue-icon-hover)]" />
+                                                        <span className="text-xs font-bold leading-tight text-white">{label}</span>
+                                                    </button>
+                                                ))}
                                             </div>
                                         )}
                                     </div>

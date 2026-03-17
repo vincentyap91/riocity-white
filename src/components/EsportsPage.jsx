@@ -43,7 +43,6 @@ export default function EsportsPage() {
     return (
         <main
             className="w-full pb-14 bg-[linear-gradient(180deg,var(--gradient-live-page-start)_0%,var(--gradient-live-page-mid)_36%,var(--gradient-live-page-end)_100%)]"
-            style={{ fontFamily: 'Bahnschrift, "Trebuchet MS", Verdana, sans-serif' }}
         >
             {showStickyPlayBar && (
                 <div
@@ -95,10 +94,10 @@ export default function EsportsPage() {
                                         className="h-20 object-contain"
                                     />
                                 </div>
-                                <h1 className="mt-3 text-base font-black uppercase tracking-[0.03em] text-[rgb(25_41_71)] md:text-2xl">
+                                <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.03em] text-[rgb(25_41_71)]">
                                     E-Sports
                                 </h1>
-                                <p className="mx-auto mt-3 max-w-[420px] text-sm font-semibold leading-[1.35] text-[rgb(42_53_72)] md:mt-4 md:text-xl md:leading-[1.32]">
+                                <p className="mx-auto mt-3 max-w-[420px] text-base font-semibold leading-[1.35] text-[rgb(42_53_72)] md:mt-4">
                                     Top tournaments, live odds, nonstop hype.
                                 </p>
                                 <a

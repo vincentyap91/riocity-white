@@ -8,7 +8,6 @@ export default function AccountLayout({ activePage, authUser, onNavigate, onLogo
     return (
         <main
             className="w-full bg-[linear-gradient(180deg,var(--gradient-account-shell-start)_0%,var(--gradient-account-shell-mid)_38%,var(--gradient-account-shell-end)_100%)] pb-16 pt-6 md:pt-8"
-            style={{ fontFamily: 'var(--font-family-sans)' }}
         >
             <div className="mx-auto flex w-full max-w-[1480px] flex-col gap-6 px-4 md:px-6 xl:px-8">
                 <div className="flex items-center justify-between gap-3 lg:hidden">

@@ -48,7 +48,7 @@ export default function FeedbackPage() {
         <div className="page-container">
             <h1 className="page-title">Share Feedback</h1>
 
-            <div className="mt-8 max-w-xl">
+            <div className="mt-8">
                 <div className="surface-card rounded-2xl p-6 md:p-8">
                     <p className="mb-6 text-sm font-medium leading-relaxed text-[var(--color-text-muted)]">
                         Your insights fuel an exceptional gaming experience for all. Share your thoughts now.

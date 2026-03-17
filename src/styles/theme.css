@@ -1,5 +1,7 @@
 :root {
-  --font-family-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  /* Typography tokens – use these instead of hardcoded font-family */
+  --font-family-primary: "Poppins", sans-serif;
+  --font-family-sans: "Poppins", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 
   --color-brand-primary: #00AEEF;
   --color-brand-secondary: #0072BC;
@@ -146,6 +148,7 @@
 }
 
 @theme {
+  --font-sans: var(--font-family-sans);
   --color-prime-light: #00AEEF;
   --color-prime-dark: #0072BC;
   --radius-xl: 15px;
@@ -208,10 +211,15 @@
   }
 
   .page-title {
+    font-family: var(--font-family-sans);
     font-size: var(--text-page-title);
     font-weight: 700;
     letter-spacing: var(--tracking-page-title);
     color: var(--color-text-strong);
+  }
+
+  .font-primary {
+    font-family: var(--font-family-sans);
   }
 
   .surface-card {
