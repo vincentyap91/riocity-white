@@ -5,6 +5,9 @@ import {
     ChevronDown,
     CircleDollarSign,
     EllipsisVertical,
+    Menu,
+    Smartphone,
+    X,
     Headset,
     Heart,
     LogOut,
@@ -18,6 +21,7 @@ import {
     Wallet
 } from 'lucide-react';
 import LiveCasinoMenu from './LiveCasinoMenu';
+import LanguageSwitcher from './LanguageSwitcher';
 import { supportOptions } from '../constants/supportOptions';
 import { settingsOptions } from '../constants/settingsOptions';
 import VipStatusPill from './VipStatusPill';
@@ -26,16 +30,18 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
     const vipLevel = authUser?.vipLevel || 'Diamond';
     const [casinoMenuOpen, setCasinoMenuOpen] = useState(false);
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [language, setLanguage] = useState('th-th');
     const [openProfileSection, setOpenProfileSection] = useState('account');
     const profileMenuRef = useRef(null);
 
     const mainLinks = [
         'Home', 'Casino', 'Slots', 'Sports', 'E-Sports', 'Lottery',
         'Fishing', 'Poker',
-        'Promotion', 'VIP', 'More'
+        'Promotion', 'Referral', 'VIP'
     ];
-    const navTargets = { Home: 'home', Casino: 'live-casino', Slots: 'slots', Sports: 'sports', 'E-Sports': 'e-sports', Lottery: 'lottery', Fishing: 'fishing', Poker: 'poker', Promotion: 'promotion', VIP: 'vip' };
-    const navHrefs = { Home: '/', Casino: '/casino', Slots: '/slots', Sports: '/sports', 'E-Sports': '/e-sports', Lottery: '/lottery', Fishing: '/fishing', Poker: '/poker', Promotion: '/promotion', VIP: '/vip' };
+    const navTargets = { Home: 'home', Casino: 'live-casino', Slots: 'slots', Sports: 'sports', 'E-Sports': 'e-sports', Lottery: 'lottery', Fishing: 'fishing', Poker: 'poker', Promotion: 'promotion', Referral: 'referral', VIP: 'vip' };
+    const navHrefs = { Home: '/', Casino: '/casino', Slots: '/slots', Sports: '/sports', 'E-Sports': '/e-sports', Lottery: '/lottery', Fishing: '/fishing', Poker: '/poker', Promotion: '/promotion', Referral: '/referral', VIP: '/vip' };
     const accountCards = [
         { label: 'Account Details', icon: UserRound },
         { label: 'Verification', icon: ShieldCheck },
@@ -64,30 +70,88 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
         return () => window.removeEventListener('pointerdown', handlePointerDown);
     }, [profileMenuOpen]);
 
+    useEffect(() => {
+        if (!mobileMenuOpen) {
+            return undefined;
+        }
+
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+
+        return () => {
+            document.body.style.overflow = previousOverflow;
+        };
+    }, [mobileMenuOpen]);
+
+    useEffect(() => {
+        setMobileMenuOpen(false);
+    }, [activePage]);
+
     const toggleProfileSection = (sectionKey) => {
         setOpenProfileSection((current) => (current === sectionKey ? null : sectionKey));
     };
 
+    const handleMobileNavigate = (targetPage) => {
+        setMobileMenuOpen(false);
+        onNavigate?.(targetPage);
+    };
+
     return (
         <nav
-            className="fixed top-0 left-0 right-0 w-full z-50 shadow-md"
+            className="fixed top-0 left-0 right-0 w-full z-50 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
             onMouseLeave={() => setCasinoMenuOpen(false)}
         >
-            <div className="flex h-8 w-full items-center justify-between bg-[var(--color-nav-top)] px-4 text-xs text-white md:px-10">
-                <div className="flex gap-4 items-center h-full">
-                    <a href="#" className="flex h-full items-center gap-1 border-r border-[var(--color-brand-primary)] px-2 hover:text-white/80">
-                        <span className="text-sm">Mobile</span>
-                    </a>
-                    <button
-                        type="button"
-                        onClick={() => onNavigate?.('referral')}
-                        className="flex h-full items-center gap-1 px-2 text-left hover:text-white/80"
-                    >
-                        <span className="text-sm">Referral</span>
-                    </button>
+            <div className="relative z-[300] flex md:hidden w-full items-center justify-between gap-2 border-b border-white/10 bg-[var(--color-nav-top)] px-3 py-2 text-white">
+                <button
+                    type="button"
+                    onClick={() => setMobileMenuOpen((open) => !open)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white transition hover:bg-white/15"
+                    aria-label="Open mobile menu"
+                    aria-expanded={mobileMenuOpen}
+                >
+                    <Menu size={16} />
+                </button>
+                <div className="flex items-center gap-2">
+                    {authUser && (
+                        <VipStatusPill
+                            level={vipLevel}
+                            theme="dark"
+                            size="header"
+                            username={authUser.name}
+                            className="h-10 px-3"
+                        />
+                    )}
+                    <LanguageSwitcher
+                        value={language}
+                        onChange={setLanguage}
+                        buttonClassName="h-10 rounded-xl px-3"
+                    />
                 </div>
+            </div>
 
-                <div className="flex items-center gap-2 h-full py-1">
+            <button
+                type="button"
+                onClick={() => onNavigate?.('app-download')}
+                className="fixed bottom-24 right-6 z-[110] inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[linear-gradient(90deg,var(--color-brand-secondary)_0%,var(--color-brand-primary)_100%)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.18)] transition hover:brightness-105 md:hidden"
+                aria-label="Download app"
+            >
+                <Smartphone size={18} className="shrink-0" />
+            </button>
+
+            <div className="hidden h-9 w-full items-center border-b border-white/10 bg-[var(--color-nav-top)] px-4 text-xs text-white md:flex md:px-10">
+                <div className="w-full max-w-screen-2xl mx-auto flex items-center justify-between">
+                    <div className="flex gap-4 items-center h-full">
+                        <button
+                            type="button"
+                            onClick={() => onNavigate?.('app-download')}
+                            className="flex h-7 items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 hover:bg-white/10 hover:border-white/35 transition-all"
+                        >
+                            <Smartphone size={14} className="shrink-0 text-white/90" />
+                            <span className="text-sm font-medium">Download App</span>
+                        </button>
+                    </div>
+
+                    <div className="flex items-center gap-2.5 h-full">
                     {authUser ? (
                         <div
                             ref={profileMenuRef}
@@ -139,17 +203,15 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             >
                                 LOGOUT
                             </button>
-                            <div className="flex h-7 items-center justify-center rounded-[9px] border border-white/18 bg-white/[0.03] px-2 text-white/90">
-                                <span className="text-xs shadow-sm">TH</span>
-                            </div>
+                            <LanguageSwitcher value={language} onChange={setLanguage} />
 
                             {profileMenuOpen && (
-                                <div className="dark-nav-shell absolute right-25 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[22px] p-4 text-white">
+                                <div className="dark-nav-shell absolute right-25 top-[calc(100%+10px)] z-[120] w-[312px] overflow-hidden rounded-[30px] p-3.5 text-white">
                                     <div className="absolute inset-x-0 top-0 h-20 bg-[radial-gradient(circle_at_top,#29bbff55_0%,transparent_72%)] pointer-events-none" />
 
                                     <div className="relative flex items-start gap-3">
                                         <div className="relative shrink-0">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-full border-[3px] border-[rgb(86_185_255_/_0.3)] bg-[linear-gradient(180deg,#1a5bb1_0%,#0b3e80_100%)] shadow-[var(--inset-highlight-strong)]">
+                                            <div className="flex h-16 w-16 items-center justify-center rounded-full border-[3px] border-[rgb(86_185_255_/_0.5)] bg-[linear-gradient(180deg,#1a5bb1_0%,#0b3e80_100%)] shadow-[var(--inset-highlight-strong)]">
                                                 <UserCircle2 size={40} className="text-white/90" />
                                             </div>
                                             <button
@@ -179,7 +241,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                         </div>
                                     </div>
 
-                                    <div className="dark-nav-panel relative mt-4 rounded-[18px] p-3">
+                                    <div className="dark-nav-panel relative mt-4 rounded-[22px] p-3">
                                         <button
                                             type="button"
                                             onClick={() => toggleProfileSection('cashier')}
@@ -219,7 +281,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                         )}
                                     </div>
 
-                                    <div className="dark-nav-panel relative mt-3 rounded-[18px] p-3">
+                                    <div className="dark-nav-panel relative mt-3 rounded-[22px] p-3">
                                         <button
                                             type="button"
                                             onClick={() => toggleProfileSection('account')}
@@ -260,7 +322,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                         )}
                                     </div>
 
-                                    <div className="dark-nav-panel relative mt-3 rounded-[18px] p-3">
+                                    <div className="dark-nav-panel relative mt-3 rounded-[22px] p-3">
                                         <button
                                             type="button"
                                             onClick={() => toggleProfileSection('support')}
@@ -299,7 +361,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                         )}
                                     </div>
 
-                                    <div className="dark-nav-panel mt-3 rounded-[18px] px-4 py-3 transition hover:border-[rgb(102_203_255_/_0.24)]">
+                                    <div className="dark-nav-panel mt-3 rounded-[22px] px-4 py-3 transition hover:border-[rgb(102_203_255_/_0.24)]">
                                         <button
                                             type="button"
                                             onClick={() => toggleProfileSection('settings')}
@@ -355,79 +417,312 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                             <button
                                 type="button"
                                 onClick={() => onLoginClick?.()}
-                                className="h-full px-6 rounded border border-white/50 hover:bg-white/10 transition-colors font-semibold"
+                                className="h-7 rounded-lg border border-white/40 px-4 text-xs font-semibold text-white hover:bg-white/10 hover:border-white/50 transition-all"
                             >
                                 Login
                             </button>
                             <button
                                 type="button"
                                 onClick={() => onRegisterClick?.()}
-                                className="h-full rounded bg-[var(--color-success-main)] px-6 font-semibold shadow-[var(--shadow-success)] shadow-inner transition-colors hover:bg-[var(--color-success-hover)]"
+                                className="h-7 rounded-lg bg-[var(--color-success-main)] px-4 text-xs font-semibold text-white shadow-[0_2px_8px_rgba(57,181,74,0.35)] transition-all hover:bg-[var(--color-success-hover)] hover:shadow-[0_2px_10px_rgba(57,181,74,0.4)]"
                             >
                                 Join Now
                             </button>
-                            <button type="button" className="h-full px-2 border border-white/30 rounded flex items-center justify-center opacity-90 mx-1">
-                                <span className="text-sm shadow-sm">TH</span>
-                            </button>
+                            <LanguageSwitcher value={language} onChange={setLanguage} />
                         </>
                     )}
+                    </div>
                 </div>
             </div>
 
             <div className="flex h-14 w-full items-center bg-[var(--color-nav-main)] px-4 md:px-10">
-                <div className="w-full max-w-screen-2xl mx-auto flex items-center justify-between">
-                    <button
-                        type="button"
-                        onClick={() => onNavigate?.('home')}
-                        className="text-2xl font-black text-white/90 drop-shadow-sm tracking-wide mr-8 cursor-pointer hover:opacity-80"
-                    >
-                        LOGO
-                    </button>
+                <div className="w-full max-w-screen-2xl mx-auto flex items-center justify-between gap-6">
+                    <div className="flex items-center gap-2 shrink-0">
+                        <button
+                            type="button"
+                            onClick={() => onNavigate?.('home')}
+                            className="text-lg font-black text-white tracking-wide cursor-pointer hover:opacity-90 transition-opacity md:text-xl"
+                        >
+                            LOGO
+                        </button>
+                    </div>
 
-                    <div className="hidden lg:flex flex-1 justify-center items-center gap-x-[14px]">
-                        {mainLinks.map((link, idx) => (
-                            <a
-                                key={idx}
-                                href={navHrefs[link] ?? '#'}
-                                onMouseEnter={() => {
-                                    if (link === 'Casino') {
-                                        setCasinoMenuOpen(true);
-                                    } else {
-                                        setCasinoMenuOpen(false);
-                                    }
-                                }}
-                                onFocus={() => {
-                                    if (link === 'Casino') {
-                                        setCasinoMenuOpen(true);
-                                    }
-                                }}
-                                onClick={(event) => {
-                                    const target = navTargets[link];
-                                    if (target) {
-                                        event.preventDefault();
-                                        onNavigate?.(target);
-                                    }
-                                }}
-                                className={`text-white text-xs font-medium hover:text-yellow-300 transition-colors whitespace-nowrap drop-shadow-sm
-                    ${link === 'More' ? 'flex items-center group' : ''}
-                    ${activePage === 'home' && link === 'Home' ? 'text-yellow-300' : ''}
-                    ${activePage === 'live-casino' && link === 'Casino' ? 'text-yellow-300' : ''}
-                    ${activePage === 'slots' && link === 'Slots' ? 'text-yellow-300' : ''}
-                    ${activePage === 'sports' && link === 'Sports' ? 'text-yellow-300' : ''}
-                    ${activePage === 'e-sports' && link === 'E-Sports' ? 'text-yellow-300' : ''}
-                    ${activePage === 'lottery' && link === 'Lottery' ? 'text-yellow-300' : ''}
-                    ${activePage === 'fishing' && link === 'Fishing' ? 'text-yellow-300' : ''}
-                    ${activePage === 'poker' && link === 'Poker' ? 'text-yellow-300' : ''}
-                    ${activePage === 'promotion' && link === 'Promotion' ? 'text-yellow-300' : ''}
-                    ${activePage === 'vip' && link === 'VIP' ? 'text-yellow-300' : ''}`}
-                            >
-                                {link}
-                                {link === 'More' && <ChevronDown size={14} className="ml-0.5 group-hover:rotate-180 transition-transform" strokeWidth={3} />}
-                            </a>
-                        ))}
+                    <div className="hidden lg:flex flex-1 justify-end items-center gap-x-1">
+                        {mainLinks.map((link, idx) => {
+                            const isActive = (activePage === 'home' && link === 'Home') ||
+                                (activePage === 'live-casino' && link === 'Casino') ||
+                                (activePage === 'slots' && link === 'Slots') ||
+                                (activePage === 'sports' && link === 'Sports') ||
+                                (activePage === 'e-sports' && link === 'E-Sports') ||
+                                (activePage === 'lottery' && link === 'Lottery') ||
+                                (activePage === 'fishing' && link === 'Fishing') ||
+                                (activePage === 'poker' && link === 'Poker') ||
+                                (activePage === 'promotion' && link === 'Promotion') ||
+                                (activePage === 'referral' && link === 'Referral') ||
+                                (activePage === 'vip' && link === 'VIP');
+                            return (
+                                <a
+                                    key={idx}
+                                    href={navHrefs[link] ?? '#'}
+                                    onMouseEnter={() => {
+                                        if (link === 'Casino') setCasinoMenuOpen(true);
+                                        else setCasinoMenuOpen(false);
+                                    }}
+                                    onFocus={() => {
+                                        if (link === 'Casino') setCasinoMenuOpen(true);
+                                    }}
+                                    onClick={(event) => {
+                                        const target = navTargets[link];
+                                        if (target) {
+                                            event.preventDefault();
+                                            onNavigate?.(target);
+                                        }
+                                    }}
+                                    className={`relative px-4 py-2.5 rounded-lg text-[13px] font-medium whitespace-nowrap transition-all border border-transparent
+                                        ${isActive
+                                            ? 'btn-theme-cta-soft border-amber-300 text-amber-950 shadow-[0_6px_12px_rgba(255,174,39,0.18)] hover:brightness-105'
+                                            : 'text-white/90 hover:text-white hover:bg-white/10 hover:border-white/20'}`}
+                                >
+                                    {link}
+                                </a>
+                            );
+                        })}
+                    </div>
+
+                    <div className="flex items-center gap-2 lg:hidden">
+                        {authUser ? (
+                            <>
+                                <div className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-white/15 bg-white/10 px-3 text-sm font-bold text-white shadow-[0_4px_10px_rgba(0,0,0,0.08)]">
+                                    <span className="truncate">{authUser.balance}</span>
+                                    <CircleDollarSign size={14} className="shrink-0 text-[var(--color-nav-gold)]" />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => handleMobileNavigate('deposit')}
+                                    className="btn-theme-cta-soft inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-black tracking-wide"
+                                >
+                                    Deposit
+                                </button>
+                            </>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => onLoginClick?.()}
+                                    className="inline-flex min-h-10 items-center justify-center rounded-xl border border-white/35 bg-white/5 px-3.5 text-sm font-semibold text-white transition hover:bg-white/10 hover:border-white/50"
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => onRegisterClick?.()}
+                                    className="btn-theme-cta-soft inline-flex min-h-10 items-center justify-center rounded-xl px-3.5 text-sm font-black"
+                                >
+                                    Join Now
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
+
+            <button
+                type="button"
+                className={`fixed inset-x-0 bottom-0 top-0 z-[380] bg-[var(--color-nav-overlay)] backdrop-blur-[1px] transition-opacity duration-300 md:hidden ${
+                    mobileMenuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+                }`}
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close mobile menu"
+                aria-hidden={!mobileMenuOpen}
+                tabIndex={mobileMenuOpen ? 0 : -1}
+            />
+            <aside
+                className={`fixed left-0 top-0 z-[390] flex h-[calc(100vh-96px)] w-full max-w-[360px] h-full flex-col overflow-hidden border-r border-white/10 bg-[linear-gradient(180deg,#0d3f83_0%,#062754_100%)] text-white shadow-[var(--shadow-nav-dropdown)] transition-transform duration-300 ease-out md:hidden ${
+                    mobileMenuOpen ? 'translate-x-0' : 'pointer-events-none -translate-x-full'
+                }`}
+                aria-hidden={!mobileMenuOpen}
+            >
+                <div className="relative border-b border-white/10 px-4 py-4">
+                    <div className="min-w-0">
+                            <h2 className="pr-14 text-2xl font-black leading-tight">
+                                {authUser ? `Hi, ${authUser.name}` : 'Play Anywhere'}
+                            </h2>
+                            {authUser && (
+                                <div className="mt-3 space-y-3">
+                                    <VipStatusPill level={vipLevel} theme="dark" />
+                                    <div className="rounded-[22px] border border-white/10 bg-white/5 p-3 w-full">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <div>
+                                                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-[var(--color-nav-text-accent)]">
+                                                    Balance
+                                                </p>
+                                                <p className="mt-1 text-lg font-black text-white">{authUser.balance}</p>
+                                            </div>
+                                            <span className="inline-flex h-10 w-10 items-center justify-center rounded-2xl border border-[rgb(255_216_77_/_0.22)] bg-[rgb(255_216_77_/_0.08)] text-[var(--color-nav-gold)]">
+                                                <CircleDollarSign size={18} />
+                                            </span>
+                                        </div>
+                                        <div className="mt-3 grid grid-cols-2 gap-2">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleMobileNavigate('deposit')}
+                                                className="btn-theme-cta-soft inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl px-4 text-sm font-black"
+                                            >
+                                                <ArrowDownToLine size={16} />
+                                                Deposit
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleMobileNavigate('withdrawal')}
+                                                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                            >
+                                                <ArrowUpFromLine size={16} />
+                                                Withdraw
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                    </div>
+
+                    <button
+                        type="button"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/15"
+                        aria-label="Close mobile menu"
+                    >
+                        <X size={18} />
+                    </button>
+
+                </div>
+
+                <div className="flex-1 overflow-y-auto px-4 py-4">
+                    <div className="grid grid-cols-2 gap-2">
+                        {mainLinks.map((link) => (
+                            <button
+                                key={link}
+                                type="button"
+                                onClick={() => handleMobileNavigate(navTargets[link])}
+                                className={`min-h-12 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
+                                    (activePage === 'home' && link === 'Home') ||
+                                    (activePage === 'live-casino' && link === 'Casino') ||
+                                    (activePage === 'slots' && link === 'Slots') ||
+                                    (activePage === 'sports' && link === 'Sports') ||
+                                    (activePage === 'e-sports' && link === 'E-Sports') ||
+                                    (activePage === 'lottery' && link === 'Lottery') ||
+                                    (activePage === 'fishing' && link === 'Fishing') ||
+                                    (activePage === 'poker' && link === 'Poker') ||
+                                    (activePage === 'promotion' && link === 'Promotion') ||
+                                    (activePage === 'referral' && link === 'Referral') ||
+                                    (activePage === 'vip' && link === 'VIP')
+                                        ? 'border-amber-300 bg-[linear-gradient(180deg,var(--color-cta-start)_0%,var(--color-cta-end)_100%)] text-[var(--color-cta-text)] shadow-[var(--shadow-cta-soft)]'
+                                        : 'border-white/10 bg-white/5 text-white hover:bg-white/10'
+                                }`}
+                            >
+                                {link}
+                            </button>
+                        ))}
+                    </div>
+
+                    {authUser ? (
+                        <div className="mt-6 space-y-4">
+                            <div className="grid grid-cols-1 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => handleMobileNavigate('profile')}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                >
+                                    <UserRound size={16} />
+                                    Profile
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        onLiveChatClick?.();
+                                    }}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                >
+                                    <Headset size={16} />
+                                    Live Chat
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleMobileNavigate('app-download')}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                >
+                                    <Smartphone size={16} />
+                                    App
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        onLogout?.();
+                                    }}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-[rgb(255_216_77_/_0.3)] bg-[rgb(255_216_77_/_0.08)] px-4 text-sm font-black text-[var(--color-nav-gold)] transition hover:bg-[rgb(255_216_77_/_0.14)]"
+                                >
+                                    <LogOut size={16} />
+                                    Log Out
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="mt-6 space-y-4">
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        onLoginClick?.();
+                                    }}
+                                    className="inline-flex min-h-12 items-center justify-center rounded-2xl border border-white/35 px-4 text-sm font-semibold text-white transition hover:bg-white/10"
+                                >
+                                    Login
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        onRegisterClick?.();
+                                    }}
+                                    className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-[var(--color-success-main)] px-4 text-sm font-semibold text-white shadow-[0_2px_8px_rgba(57,181,74,0.35)] transition hover:bg-[var(--color-success-hover)]"
+                                >
+                                    Join Now
+                                </button>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMobileMenuOpen(false);
+                                        onLiveChatClick?.();
+                                    }}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                >
+                                    <Headset size={16} />
+                                    Live Chat
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleMobileNavigate('app-download')}
+                                    className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
+                                >
+                                    <Smartphone size={16} />
+                                    App
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </aside>
 
             <LiveCasinoMenu
                 open={casinoMenuOpen}
@@ -438,7 +733,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
             />
 
             {casinoMenuOpen && (
-                <div className="fixed inset-x-0 bottom-0 top-[88px] z-[70] bg-[var(--color-nav-overlay)] backdrop-blur-[1px] pointer-events-none" />
+                <div className="fixed inset-x-0 bottom-0 top-[92px] z-[70] bg-[var(--color-nav-overlay)] backdrop-blur-[1px] pointer-events-none" />
             )}
         </nav>
     );

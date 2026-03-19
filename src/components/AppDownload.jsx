@@ -1,10 +1,8 @@
 import React from 'react';
 import { Apple, Play } from 'lucide-react';
 
-/* ── Inline SVG decorations ────────────────────────────── */
-
 const GearSVG = () => (
-    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
         <defs>
             <radialGradient id="g1" cx="38%" cy="28%" r="65%">
                 <stop offset="0%" stopColor="#FFE066" />
@@ -15,7 +13,6 @@ const GearSVG = () => (
                 <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#FFB80066" />
             </filter>
         </defs>
-        {/* Gear teeth path */}
         <path
             d="M40 10 L44 6 L48 10 L54 8 L56 14 L62 14 L63 20 L69 22 L68 28 L74 32 L71 38
                L76 43 L71 48 L74 54 L68 57 L69 63 L63 65 L62 71 L56 71 L54 76 L48 74
@@ -25,16 +22,14 @@ const GearSVG = () => (
             fill="url(#g1)"
             filter="url(#gearShadow)"
         />
-        {/* Center hole */}
         <circle cx="40" cy="42" r="12" fill="#E09000" />
         <circle cx="40" cy="42" r="9" fill="#FFD740" />
-        {/* Highlight */}
         <ellipse cx="34" cy="34" rx="7" ry="4" fill="rgba(255,255,255,0.30)" transform="rotate(-25 34 34)" />
     </svg>
 );
 
 const ShieldSVG = () => (
-    <svg viewBox="0 0 56 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <svg viewBox="0 0 56 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
         <defs>
             <radialGradient id="sh1" cx="35%" cy="22%" r="70%">
                 <stop offset="0%" stopColor="#6FE4FF" />
@@ -42,15 +37,14 @@ const ShieldSVG = () => (
                 <stop offset="100%" stopColor="#005FA0" />
             </radialGradient>
         </defs>
-        <path d="M28 3L4 13v16c0 14.3 10.3 27.7 24 31C41.7 56.7 52 43.3 52 29V13L28 3z"
-            fill="url(#sh1)" stroke="white" strokeWidth="2.5" />
+        <path d="M28 3L4 13v16c0 14.3 10.3 27.7 24 31C41.7 56.7 52 43.3 52 29V13L28 3z" fill="url(#sh1)" stroke="white" strokeWidth="2.5" />
         <path d="M17 30l7 7 15-14" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
         <ellipse cx="22" cy="17" rx="7" ry="3.5" fill="rgba(255,255,255,0.28)" transform="rotate(-20 22 17)" />
     </svg>
 );
 
 const BadgeSVG = () => (
-    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
         <defs>
             <radialGradient id="bd1" cx="35%" cy="25%" r="70%">
                 <stop offset="0%" stopColor="#FF9A80" />
@@ -66,26 +60,21 @@ const BadgeSVG = () => (
     </svg>
 );
 
-/* ── Phone screen content ───────────────────────────────── */
-
 const PhoneBack = () => (
     <div className="flex h-full w-full flex-col gap-2 overflow-hidden rounded-[20px] bg-[linear-gradient(180deg,#48C8F0_0%,#006EB5_100%)] p-2 pt-8">
-        {/* Logo row */}
         <div className="flex items-center justify-between px-1">
-            <div className="bg-white/20 rounded px-2 py-0.5 text-white font-black text-xs">LOGO</div>
+            <div className="rounded bg-white/20 px-2 py-0.5 text-xs font-black text-white">LOGO</div>
             <div className="flex gap-1">
-                <div className="w-3 h-3 bg-white/30 rounded-full" />
-                <div className="w-3 h-3 bg-white/30 rounded-full" />
+                <div className="h-3 w-3 rounded-full bg-white/30" />
+                <div className="h-3 w-3 rounded-full bg-white/30" />
             </div>
         </div>
-        {/* Hero */}
-        <div className="w-full h-14 bg-white/15 rounded-lg border border-white/20 flex items-center justify-center gap-1">
-            {[0, 1, 2].map(i => <div key={i} className="w-7 h-10 bg-white/20 rounded-md" />)}
+        <div className="flex h-14 w-full items-center justify-center gap-1 rounded-lg border border-white/20 bg-white/15">
+            {[0, 1, 2].map((item) => <div key={item} className="h-10 w-7 rounded-md bg-white/20" />)}
         </div>
-        {/* Grid */}
-        <div className="grid grid-cols-3 gap-1 flex-1">
-            {[...Array(9)].map((_, i) => (
-                <div key={i} className="bg-white/15 border border-white/20 rounded-md" />
+        <div className="grid flex-1 grid-cols-3 gap-1">
+            {Array.from({ length: 9 }).map((_, index) => (
+                <div key={index} className="rounded-md border border-white/20 bg-white/15" />
             ))}
         </div>
     </div>
@@ -93,130 +82,126 @@ const PhoneBack = () => (
 
 const PhoneFront = () => (
     <div className="flex h-full w-full flex-col gap-1.5 overflow-hidden rounded-[22px] bg-[linear-gradient(180deg,var(--color-brand-primary)_0%,#004E96_100%)] p-2 pt-9">
-        {/* Logo + top bar */}
-        <div className="flex items-center justify-between px-1 py-0.5 bg-white/10 rounded-md">
-            <div className="w-12 h-2.5 bg-white/60 rounded-sm" />
+        <div className="flex items-center justify-between rounded-md bg-white/10 px-1 py-0.5">
+            <div className="h-2.5 w-12 rounded-sm bg-white/60" />
             <div className="flex gap-0.5">
-                <div className="w-5 h-3 bg-[#FFB800] rounded-sm flex items-center justify-center text-xs font-black text-white">EN</div>
-                <div className="w-3 h-3 bg-white/30 rounded-sm" />
+                <div className="flex h-3 w-5 items-center justify-center rounded-sm bg-[#FFB800] text-xs font-black text-white">EN</div>
+                <div className="h-3 w-3 rounded-sm bg-white/30" />
             </div>
         </div>
-        {/* Banner */}
-        <div className="w-full h-12 bg-gradient-to-r from-[#0080C8] to-[#005090] rounded-lg border border-white/20 flex items-center justify-around px-1">
-            <div className="w-7 h-9 bg-white/20 rounded-md" />
-            <div className="w-7 h-9 bg-white/20 rounded-md" />
-            <div className="w-7 h-9 bg-white/20 rounded-md" />
+        <div className="flex h-12 w-full items-center justify-around rounded-lg border border-white/20 bg-gradient-to-r from-[#0080C8] to-[#005090] px-1">
+            <div className="h-9 w-7 rounded-md bg-white/20" />
+            <div className="h-9 w-7 rounded-md bg-white/20" />
+            <div className="h-9 w-7 rounded-md bg-white/20" />
         </div>
-        {/* Tab row */}
         <div className="flex gap-1">
-            {['ALL', 'HOT', 'NEW'].map(t => (
-                <div key={t} className="flex-1 h-3.5 bg-white/20 rounded-full flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">{t}</span>
+            {['ALL', 'HOT', 'NEW'].map((tab) => (
+                <div key={tab} className="flex h-3.5 flex-1 items-center justify-center rounded-full bg-white/20">
+                    <span className="text-xs font-bold text-white">{tab}</span>
                 </div>
             ))}
         </div>
-        {/* Game grid */}
-        <div className="grid grid-cols-3 gap-1 flex-1">
-            {[...Array(12)].map((_, i) => (
-                <div key={i} className="bg-white/15 border border-white/25 rounded-md flex items-center justify-center">
-                    <div className="w-2 h-2 bg-white/30 rounded-sm" />
+        <div className="grid flex-1 grid-cols-3 gap-1">
+            {Array.from({ length: 12 }).map((_, index) => (
+                <div key={index} className="flex items-center justify-center rounded-md border border-white/25 bg-white/15">
+                    <div className="h-2 w-2 rounded-sm bg-white/30" />
                 </div>
             ))}
         </div>
     </div>
 );
 
-/* ── Main component ─────────────────────────────────────── */
-
 export default function AppDownload() {
+    const downloadOptions = [
+        { icon: <Apple size={14} fill="currentColor" />, label: 'iOS Download' },
+        { icon: <Play size={10} fill="currentColor" className="ml-0.5" />, label: 'APK Download' }
+    ];
+
     return (
-        <section className="w-full relative mt-16 mb-8 pt-8 px-4 flex flex-col md:flex-row items-center justify-between gap-12">
+        <section className="relative mt-12 overflow-hidden rounded-[30px] border border-white/80 bg-[linear-gradient(180deg,#edf8ff_0%,#dceffb_100%)] px-5 py-6 shadow-[0_14px_32px_rgba(0,114,188,0.08)] sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[280px] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/45 blur-3xl" />
+            <div className="pointer-events-none absolute right-[-40px] top-12 h-32 w-32 rounded-full bg-[rgb(0_174_239_/_0.12)] blur-3xl" />
 
-            {/* Background radial glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[300px] bg-white/40 blur-3xl pointer-events-none rounded-[100%] z-0" />
-
-            {/* ── Left: Text ────────────────────────────── */}
-            <div className="flex-1 z-10 w-full max-w-sm">
-                <h2 className="mb-4 text-2xl font-bold leading-tight tracking-tight text-[var(--color-text-brand-soft)]">
-                    Download the <span className="text-[var(--color-brand-primary)]">Riocity9 APP</span>
-                </h2>
-                <p className="text-xs font-semibold leading-relaxed text-[var(--color-brand-secondary)] opacity-80">
-                    Playing through the application is more convenient than playing through the website.
-                    You can definitely feel the difference. Register to receive free credit and many bonuses through this channel.
-                </p>
-            </div>
-
-            {/* ── Center: Phone Mockups ─────────────────── */}
-            <div className="flex-1 w-full flex justify-center items-center relative h-[320px] z-10">
-
-                {/* Light blue background blob */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[180px] bg-[#C6EEFF]/70 rounded-[60%] blur-2xl pointer-events-none" />
-
-                {/* Spinning Gear — far left */}
-                <div
-                    className="absolute left-[-10px] top-1/2 -translate-y-1/2 w-16 h-16 z-10"
-                    style={{ animation: 'spin 9s linear infinite' }}
-                >
-                    <GearSVG />
-                </div>
-
-                {/* Back phone — rotated right */}
-                <div className="absolute right-[14%] top-4 z-10"
-                    style={{ transform: 'rotate(10deg)', filter: 'drop-shadow(0 12px 24px rgba(0,100,180,0.22))' }}>
-                    <div className="w-[118px] h-[238px] bg-white rounded-[22px] border-[4px] border-gray-100 overflow-hidden flex flex-col">
-                        {/* Notch */}
-                        <div className="flex justify-center pt-1.5">
-                            <div className="w-9 h-2 bg-gray-200 rounded-full" />
-                        </div>
-                        <PhoneBack />
+            <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[0.9fr_1fr_0.85fr] lg:gap-10">
+                <div className="w-full max-w-[360px]">
+                    <div className="inline-flex rounded-full border border-white/80 bg-white/70 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--color-brand-secondary)]">
+                        Mobile App
                     </div>
+                    <h2 className="mt-4 text-3xl font-bold leading-tight tracking-tight text-[var(--color-text-brand-soft)] sm:text-[2.1rem]">
+                        Download the <span className="text-[var(--color-brand-primary)]">Riocity9 APP</span>
+                    </h2>
+                    <p className="mt-4 text-sm font-semibold leading-relaxed text-[var(--color-brand-secondary)]/85 sm:text-[15px]">
+                        Playing through the application is more convenient than playing through the website.
+                        You can feel the difference and enjoy free credit plus bonuses through this channel.
+                    </p>
                 </div>
 
-                {/* Front phone — rotated left, on top */}
-                <div className="absolute left-[14%] -top-2 z-20"
-                    style={{ transform: 'rotate(-10deg)', filter: 'drop-shadow(0 16px 32px rgba(0,100,180,0.30))' }}>
-                    <div className="w-[128px] h-[258px] bg-white rounded-[24px] border-[5px] border-white overflow-hidden flex flex-col">
-                        {/* Notch */}
-                        <div className="flex justify-center pt-1.5">
-                            <div className="w-10 h-2.5 bg-black/10 rounded-full" />
-                        </div>
-                        <PhoneFront />
+                <div className="relative mx-auto flex h-[300px] w-full max-w-[360px] items-center justify-center sm:h-[340px]">
+                    <div className="pointer-events-none absolute left-1/2 top-1/2 h-[210px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-[60%] bg-[#c6eeff]/75 blur-2xl" />
+
+                    <div
+                        className="absolute left-[6%] top-1/2 h-14 w-14 -translate-y-1/2 drop-shadow-lg sm:h-16 sm:w-16"
+                        style={{ animation: 'spin 9s linear infinite' }}
+                    >
+                        <GearSVG />
                     </div>
-                </div>
 
-                {/* Blue Shield badge — between phones */}
-                <div className="absolute left-[42%] top-[30%] w-11 h-[52px] z-30 drop-shadow-xl">
-                    <ShieldSVG />
-                </div>
-
-                {/* Red bonus badge — far right */}
-                <div className="absolute right-[-4px] top-[28%] w-14 h-14 z-30 drop-shadow-xl"
-                    style={{ transform: 'rotate(12deg)' }}>
-                    <BadgeSVG />
-                </div>
-            </div>
-
-            {/* ── Right: QR + Buttons ───────────────────── */}
-            <div className="flex-1 w-full flex justify-center md:justify-end gap-6 z-10">
-                {[
-                    { icon: <Apple size={14} fill="currentColor" />, label: 'iOS Download' },
-                    { icon: <Play size={10} fill="currentColor" className="ml-0.5" />, label: 'APK Download' },
-                ].map(({ icon, label }) => (
-                    <div key={label} className="flex flex-col gap-3 items-center">
-                        <div className="w-[90px] h-[90px] bg-white p-1 rounded-lg border border-gray-200 shadow-sm relative group overflow-hidden">
-                            <div className="w-full h-full border border-dashed border-gray-300 rounded flex items-center justify-center">
-                                <span className="text-xs font-bold text-gray-300">QR CODE</span>
+                    <div
+                        className="absolute right-[15%] top-6 z-10"
+                        style={{ transform: 'rotate(10deg)', filter: 'drop-shadow(0 12px 24px rgba(0,100,180,0.22))' }}
+                    >
+                        <div className="flex h-[238px] w-[118px] flex-col overflow-hidden rounded-[22px] border-[4px] border-gray-100 bg-white">
+                            <div className="flex justify-center pt-1.5">
+                                <div className="h-2 w-9 rounded-full bg-gray-200" />
                             </div>
-                            {/* Scan-line hover effect */}
-                            <div className="absolute top-0 left-0 h-[1px] w-full -translate-y-full bg-[var(--color-brand-primary)] shadow-[var(--shadow-scan)] group-hover:animate-[scan_1.5s_linear_infinite]" />
+                            <PhoneBack />
                         </div>
-                        <button className="flex items-center gap-1.5 rounded-full bg-[linear-gradient(90deg,#00CFFF_0%,var(--color-brand-primary)_100%)] px-4 py-1.5 text-xs font-bold text-white shadow-md transition-transform hover:scale-105">
-                            {icon} {label}
-                        </button>
                     </div>
-                ))}
-            </div>
 
+                    <div
+                        className="absolute left-[18%] top-0 z-20"
+                        style={{ transform: 'rotate(-10deg)', filter: 'drop-shadow(0 16px 32px rgba(0,100,180,0.28))' }}
+                    >
+                        <div className="flex h-[258px] w-[128px] flex-col overflow-hidden rounded-[24px] border-[5px] border-white bg-white">
+                            <div className="flex justify-center pt-1.5">
+                                <div className="h-2.5 w-10 rounded-full bg-black/10" />
+                            </div>
+                            <PhoneFront />
+                        </div>
+                    </div>
+
+                    <div className="absolute left-[45%] top-[30%] z-30 h-[52px] w-11 drop-shadow-xl">
+                        <ShieldSVG />
+                    </div>
+
+                    <div
+                        className="absolute right-[6%] top-[28%] z-30 h-14 w-14 drop-shadow-xl"
+                        style={{ transform: 'rotate(12deg)' }}
+                    >
+                        <BadgeSVG />
+                    </div>
+                </div>
+
+                <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-2">
+                    {downloadOptions.map(({ icon, label }) => (
+                        <div
+                            key={label}
+                            className="flex flex-col items-center gap-3 rounded-[22px] border border-white/80 bg-white/72 p-4 shadow-[0_12px_24px_rgba(0,114,188,0.08)] backdrop-blur-sm"
+                        >
+                            <div className="relative overflow-hidden rounded-[16px] border border-gray-200 bg-white p-1 shadow-sm group">
+                                <div className="flex h-[96px] w-[96px] items-center justify-center rounded-[12px] border border-dashed border-gray-300">
+                                    <span className="text-xs font-bold text-gray-300">QR CODE</span>
+                                </div>
+                                <div className="absolute left-0 top-0 h-[1px] w-full -translate-y-full bg-[var(--color-brand-primary)] shadow-[var(--shadow-scan)] group-hover:animate-[scan_1.5s_linear_infinite]" />
+                            </div>
+                            <button className="flex min-h-10 w-full items-center justify-center gap-1.5 rounded-full bg-[linear-gradient(90deg,#00CFFF_0%,var(--color-brand-primary)_100%)] px-4 py-2 text-sm font-bold text-white shadow-[0_8px_18px_rgba(0,174,239,0.2)] transition-transform hover:scale-[1.02]">
+                                {icon}
+                                {label}
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </section>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import PromotionDetailModal from './PromotionDetailModal';
 import welcomeBonusImage from '../assets/promotion/welcome-bonus.jpg';
 import dailyReloadImage from '../assets/promotion/daily-unlimited-reload-bonus.jpg';
@@ -8,6 +8,7 @@ import exclusiveOfferImage from '../assets/promotion/exclusive-offer.jpg';
 import instantCashRebateImage from '../assets/promotion/instant-cash-rebate.jpg';
 
 const promotionCategories = ['All', 'Slots', 'Casino', 'Sports', 'Fishing', 'RNG', 'Lottery', 'Others'];
+const MOBILE_BATCH_SIZE = 6;
 
 const promotions = [
     {
@@ -183,11 +184,55 @@ const promotions = [
 export default function PromotionPage() {
     const [activeCategory, setActiveCategory] = useState('All');
     const [selectedPromotion, setSelectedPromotion] = useState(null);
+    const [visibleCount, setVisibleCount] = useState(MOBILE_BATCH_SIZE);
+    const hasUserScrolledRef = useRef(false);
 
     const filteredPromotions = useMemo(() => {
         if (activeCategory === 'All') return promotions;
         return promotions.filter((promotion) => promotion.category === activeCategory);
     }, [activeCategory]);
+
+    const visiblePromotions = useMemo(
+        () => filteredPromotions.slice(0, visibleCount),
+        [filteredPromotions, visibleCount]
+    );
+
+    const hasMorePromotions = visiblePromotions.length < filteredPromotions.length;
+
+    const loadMorePromotions = () => {
+        setVisibleCount((current) =>
+            current >= filteredPromotions.length
+                ? current
+                : Math.min(current + MOBILE_BATCH_SIZE, filteredPromotions.length)
+        );
+    };
+
+    useEffect(() => {
+        setVisibleCount(MOBILE_BATCH_SIZE);
+        hasUserScrolledRef.current = false;
+    }, [activeCategory]);
+
+    useEffect(() => {
+        if (!hasMorePromotions) return undefined;
+
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                hasUserScrolledRef.current = true;
+            }
+
+            if (!hasUserScrolledRef.current) return;
+
+            const reachedBottom =
+                window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8;
+
+            if (reachedBottom) {
+                loadMorePromotions();
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [hasMorePromotions, filteredPromotions.length]);
 
     return (
         <main className="w-full bg-[var(--color-page-default)] pb-14">
@@ -217,7 +262,7 @@ export default function PromotionPage() {
                     </section>
 
                     <section className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-6">
-                        {filteredPromotions.map((promotion) => (
+                        {visiblePromotions.map((promotion, index) => (
                             <article
                                 key={promotion.id}
                                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[rgb(228_234_243)] bg-[var(--color-surface-base)] shadow-[0_4px_16px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(15,23,42,0.08)]"
@@ -261,6 +306,18 @@ export default function PromotionPage() {
                             </article>
                         ))}
                     </section>
+
+                    {hasMorePromotions && (
+                        <div className="mt-8 flex justify-center">
+                            <button
+                                type="button"
+                                onClick={loadMorePromotions}
+                                className="btn-theme-cta inline-flex min-h-11 items-center justify-center rounded-xl px-6 py-3 text-sm font-black tracking-wide shadow-[0_6px_14px_rgba(242,154,0,0.28)] transition hover:-translate-y-0.5 hover:brightness-105"
+                            >
+                                Load More
+                            </button>
+                        </div>
+                    )}
 
                     {filteredPromotions.length === 0 && (
                         <div className="surface-card mt-8 rounded-2xl px-6 py-12 text-center">

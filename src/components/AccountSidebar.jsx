@@ -36,6 +36,21 @@ const cashierLinks = [
     { id: 'rebate', label: 'Rebate', icon: Percent },
 ];
 
+const MENU_BY_PAGE = {
+    profile: 'account',
+    verification: 'account',
+    favourites: 'account',
+    'my-bets': 'account',
+    feedback: 'support',
+    'help-center': 'support',
+    security: 'settings',
+    notifications: 'settings',
+    rebate: 'cashier',
+    'referral-commission': 'cashier',
+    deposit: 'cashier',
+    withdrawal: 'cashier',
+};
+
 export default function AccountSidebar({
     activePage = 'profile',
     authUser,
@@ -48,7 +63,7 @@ export default function AccountSidebar({
     const vipLevel = authUser?.vipLevel || 'Diamond';
     const [internalCollapsed, setInternalCollapsed] = useState(false);
     const [openMenus, setOpenMenus] = useState({
-        cashier: true,
+        cashier: false,
         account: false,
         support: false,
         settings: false,
@@ -56,32 +71,43 @@ export default function AccountSidebar({
 
     const sidebarCollapsed = controlledCollapsed ?? internalCollapsed;
     const setSidebarCollapsed = onSidebarCollapsedChange ?? setInternalCollapsed;
+    const activeMenuKey = MENU_BY_PAGE[activePage] ?? null;
 
     useEffect(() => {
-        if (activePage === 'rebate' || activePage === 'referral-commission' || activePage === 'deposit' || activePage === 'withdrawal') {
-            setOpenMenus((m) => ({ ...m, cashier: true }));
-        }
-        if (activePage === 'feedback' || activePage === 'help-center') {
-            setOpenMenus((m) => ({ ...m, support: true }));
-        }
-        if (activePage === 'security' || activePage === 'notifications') {
-            setOpenMenus((m) => ({ ...m, settings: true }));
-        }
-    }, [activePage]);
+        setOpenMenus({
+            cashier: activeMenuKey === 'cashier',
+            account: activeMenuKey === 'account',
+            support: activeMenuKey === 'support',
+            settings: activeMenuKey === 'settings',
+        });
+    }, [activeMenuKey]);
 
     const toggleMenu = (menuKey) => {
+        if (menuKey === activeMenuKey) {
+            return;
+        }
+
         setOpenMenus((current) => {
             const nextIsOpen = !current[menuKey];
 
-            return {
-                cashier: false,
-                account: false,
-                support: false,
-                settings: false,
-                [menuKey]: nextIsOpen,
-            };
+            return nextIsOpen
+                ? {
+                    cashier: false,
+                    account: false,
+                    support: false,
+                    settings: false,
+                    [menuKey]: true,
+                }
+                : {
+                    cashier: false,
+                    account: false,
+                    support: false,
+                    settings: false,
+                };
         });
     };
+
+    const isMenuOpen = (menuKey) => menuKey === activeMenuKey || openMenus[menuKey];
 
     const handleNavClick = (pageId) => {
         const pageMap = { profile: 'profile', verification: 'verification', favourites: 'favourites', 'my-bets': 'my-bets' };
@@ -102,7 +128,7 @@ export default function AccountSidebar({
     return (
         <>
             <aside
-                className={`relative flex flex-col overflow-visible border-r border-[var(--color-accent-100)] bg-[var(--color-surface-base)] p-5 text-[var(--color-text-strong)] shadow-[var(--shadow-sidebar)] transition-transform duration-300 lg:sticky lg:top-24 lg:self-start lg:rounded-[24px] lg:border lg:border-[var(--color-border-default)] lg:p-6 lg:shadow-[var(--shadow-card-raised)] ${sidebarWidth} w-[320px] max-w-[88vw]`}
+                className={`relative flex flex-col overflow-visible border-r border-[var(--color-accent-100)] bg-[var(--color-surface-base)] p-5 text-[var(--color-text-strong)] shadow-[var(--shadow-sidebar)] transition-transform duration-300 lg:sticky lg:top-24 lg:self-start lg:rounded-[24px] lg:border lg:border-[var(--color-border-default)] lg:p-6 lg:shadow-[var(--shadow-card-raised)] ${sidebarWidth} w-[320px] max-w-[88vw] h-full`}
             >
                 <button
                     type="button"
@@ -114,10 +140,10 @@ export default function AccountSidebar({
                 </button>
 
                 <div>
-                    <div className={`${sidebarCollapsed ? 'items-center' : 'items-start'} flex gap-4`}>
-                        <div className="relative shrink-0">
-                            <div className="blue-accent-avatar flex h-16 w-16 items-center justify-center rounded-full">
-                                <UserCircle2 size={40} className="text-[var(--color-accent-600)]" />
+                    <div className={`${sidebarCollapsed ? 'items-center' : 'items-start'} flex gap-4 pt-1`}>
+                        <div className="relative shrink-0 mt-1 ml-1">
+                            <div className="blue-accent-avatar flex aspect-square h-16 w-16 items-center justify-center overflow-hidden rounded-full">
+                                <UserCircle2 size={40} className="block text-[var(--color-accent-600)]" />
                             </div>
                             <button
                                 type="button"
@@ -157,7 +183,7 @@ export default function AccountSidebar({
                                 <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${openMenus.cashier ? 'rotate-180' : ''}`} />
                             )}
                         </button>
-                        {openMenus.cashier && !sidebarCollapsed && (
+                        {isMenuOpen('cashier') && !sidebarCollapsed && (
                             <div className="mt-4 space-y-1 overflow-hidden rounded-xl bg-[var(--color-surface-base)] p-1">
                                 {cashierLinks.map(({ id, label, icon: Icon }) => {
                                     const isActive = activePage === id;
@@ -194,10 +220,10 @@ export default function AccountSidebar({
                                 {!sidebarCollapsed && <span className="text-lg font-bold text-[var(--color-text-strong)]">My Account</span>}
                             </span>
                             {!sidebarCollapsed && (
-                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${openMenus.account ? 'rotate-180' : ''}`} />
+                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${isMenuOpen('account') ? 'rotate-180' : ''}`} />
                             )}
                         </button>
-                        {openMenus.account && !sidebarCollapsed && (
+                        {isMenuOpen('account') && !sidebarCollapsed && (
                             <div className="mt-4 space-y-1 overflow-hidden rounded-xl bg-[var(--color-surface-base)] p-1">
                                 {accountLinks.map(({ id, label, icon: Icon }) => {
                                     const isActive = activePage === id;
@@ -234,10 +260,10 @@ export default function AccountSidebar({
                                 {!sidebarCollapsed && <span className="text-lg font-bold text-[var(--color-text-strong)]">Support</span>}
                             </span>
                             {!sidebarCollapsed && (
-                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${openMenus.support ? 'rotate-180' : ''}`} />
+                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${isMenuOpen('support') ? 'rotate-180' : ''}`} />
                             )}
                         </button>
-                        {openMenus.support && !sidebarCollapsed && (
+                        {isMenuOpen('support') && !sidebarCollapsed && (
                             <div className="mt-4 space-y-1 overflow-hidden rounded-xl bg-[var(--color-surface-base)] p-1">
                                 {supportOptions.map(({ label, icon: Icon }) => {
                                     const isActive =
@@ -280,10 +306,10 @@ export default function AccountSidebar({
                                 {!sidebarCollapsed && <span className="text-lg font-bold text-[var(--color-text-strong)]">Settings</span>}
                             </span>
                             {!sidebarCollapsed && (
-                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${openMenus.settings ? 'rotate-180' : ''}`} />
+                                <ChevronDown size={18} className={`text-[var(--color-text-soft)] transition-transform ${isMenuOpen('settings') ? 'rotate-180' : ''}`} />
                             )}
                         </button>
-                        {openMenus.settings && !sidebarCollapsed && (
+                        {isMenuOpen('settings') && !sidebarCollapsed && (
                             <div className="mt-4 space-y-1 overflow-hidden rounded-xl bg-[var(--color-surface-base)] p-1">
                                 {settingsOptions.map(({ id, label, icon: Icon }) => {
                                     const isActive = activePage === id;

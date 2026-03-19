@@ -111,6 +111,9 @@ function resolvePageFromPath() {
   if (pathname === '/withdrawal') {
     return 'withdrawal';
   }
+  if (pathname === '/app-download' || pathname === '/download' || pathname === '/mobile') {
+    return 'app-download';
+  }
   if (pathname === '/bet-slip') {
     return 'my-bets';
   }
@@ -157,6 +160,7 @@ function App() {
       'referral-commission': '/referral-commission',
       deposit: '/deposit',
       withdrawal: '/withdrawal',
+      'app-download': '/app-download',
     };
     const nextPath = pathByPage[resolvedPage] ?? pathByPage[targetPage] ?? '/';
     setPage(resolvedPage);
@@ -212,7 +216,7 @@ function App() {
         }}
       />
 
-      <div className="pt-[88px]">
+      <div className="pt-[114px] md:pt-[92px]">
       <Suspense fallback={<LoadingPage fullPage="overlay" minDelay={300} />}>
       {page === 'home' ? (
         <>
@@ -250,6 +254,10 @@ function App() {
         <VipPage />
       ) : page === 'referral' ? (
         <AffiliatePage />
+      ) : page === 'app-download' ? (
+        <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-8 px-4 py-10 md:px-8">
+          <AppDownload />
+        </div>
       ) : page === 'profile' ? (
         <ProfilePage authUser={authUser} onLogout={() => setAuthUser(null)} onNavigate={handleNavigate} onLiveChatClick={() => setLiveChatOpen(true)} />
       ) : page === 'verification' ? (

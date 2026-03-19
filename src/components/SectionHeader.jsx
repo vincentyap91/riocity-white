@@ -12,7 +12,7 @@ export default function SectionHeader({ title, icon, rightLink, rightLinkTo, onN
                     {icon}
                 </div>
                 <h2 className="text-lg font-bold text-[var(--color-brand-primary)]">{title}</h2>
-                <div className="flex gap-1 ml-4 mt-1 relative top-1">
+                <div className="ml-4 mt-1 relative top-1 flex gap-1">
                     <div className="h-5 w-4 skew-x-[-20deg] bg-[var(--color-brand-primary)]"></div>
                     <div className="h-5 w-2 skew-x-[-20deg] bg-[var(--color-brand-primary)]"></div>
                     <div className="h-5 w-1 skew-x-[-20deg] bg-[var(--color-brand-primary)]"></div>

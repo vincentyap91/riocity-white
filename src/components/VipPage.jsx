@@ -24,6 +24,7 @@ const vipLevels = [
 
 const vipTierComparisonTiers = [
     { tier: 'Normal', medal: normalMedal },
+    { tier: 'Bronze', medal: bronzeMedal },
     { tier: 'Silver', medal: silverMedal },
     { tier: 'Gold', medal: goldMedal },
     { tier: 'Platinum', medal: platinumMedal },
@@ -34,33 +35,33 @@ const vipTierComparisonSections = [
     {
         header: 'Upgrade & Maintenance Requirement',
         rows: [
-            { label: 'Deposit Requirement (One Month)', values: ['First Deposit', '$300,000', '$800,000', '$1,800,000', '$5,000,000'] },
-            { label: 'Maintenance Requirement (One Month)', values: ['N/A', '$200,000', '$500,000', '$1,300,000', '$2,500,000'] },
-            { label: 'Membership Renewal', values: ['Lifetime', 'Monthly', 'Monthly', 'Monthly', 'Monthly'] },
+            { label: 'Deposit Requirement (One Month)', values: ['First Deposit', '$150,000', '$300,000', '$800,000', '$1,800,000', '$5,000,000'] },
+            { label: 'Maintenance Requirement (One Month)', values: ['N/A', '$100,000', '$200,000', '$500,000', '$1,300,000', '$2,500,000'] },
+            { label: 'Membership Renewal', values: ['Lifetime', 'Monthly', 'Monthly', 'Monthly', 'Monthly', 'Monthly'] },
         ],
     },
     {
         header: 'Daily Rollover Rebate',
         rows: [
-            { label: 'Sportsbook', values: ['0.60%', '0.70%', '0.80%', '1%', '1.25%'] },
-            { label: 'Live Casino', values: ['0.65%', '0.75%', '0.85%', '1.05%', '1.35%'] },
-            { label: 'Slot Games', values: ['0.55%', '0.65%', '0.75%', '0.95%', '1.15%'] },
+            { label: 'Sportsbook', values: ['0.60%', '0.65%', '0.70%', '0.80%', '1%', '1.25%'] },
+            { label: 'Live Casino', values: ['0.65%', '0.70%', '0.75%', '0.85%', '1.05%', '1.35%'] },
+            { label: 'Slot Games', values: ['0.55%', '0.60%', '0.65%', '0.75%', '0.95%', '1.15%'] },
         ],
     },
     {
         header: 'Gifts & Treats',
         rows: [
-            { label: 'Tier Upgrade Bonus', values: ['N/A', '$888', '$1,888', '$2,888', '$8,888'] },
-            { label: 'Weekly Cash Rebate', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
-            { label: 'Birthday Bonus', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
+            { label: 'Tier Upgrade Bonus', values: ['N/A', '$500', '$888', '$1,888', '$2,888', '$8,888'] },
+            { label: 'Weekly Cash Rebate', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+            { label: 'Birthday Bonus', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
         ],
     },
     {
         header: 'Service Support',
         rows: [
-            { label: 'Daily Withdrawal Limit', values: ['3 Times', '3 Times', '4 Times', '5 Times', '8 Times'] },
-            { label: 'VIP Privilege Customer Service', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes'] },
-            { label: 'Deposit and Withdrawal Prioritization', values: ['N/A', 'Standard', 'Standard', 'High Priority', 'Highest Priority'] },
+            { label: 'Daily Withdrawal Limit', values: ['3 Times', '3 Times', '4 Times', '4 Times', '5 Times', '8 Times'] },
+            { label: 'VIP Privilege Customer Service', values: ['N/A', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes'] },
+            { label: 'Deposit and Withdrawal Prioritization', values: ['N/A', 'Standard', 'Standard', 'High Priority', 'High Priority', 'Highest Priority'] },
         ],
     },
 ];
@@ -170,7 +171,7 @@ function UpgradeContent() {
                                 <React.Fragment key={section.header}>
                                     <tr>
                                         <td
-                                            colSpan={6}
+                                            colSpan={7}
                                             className="border-b border-[rgb(226_232_240)] bg-[rgb(241_245_252)] px-4 py-3 text-xs font-bold uppercase tracking-[0.1em] text-[rgb(28_40_65)]"
                                         >
                                             {section.header}

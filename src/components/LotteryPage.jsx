@@ -102,26 +102,26 @@ export default function LotteryPage() {
                             alt="Lottery Banner"
                             className="block h-full w-full bg-[rgb(221_232_248)] object-cover object-center"
                         />
-                        <div className="absolute inset-y-0 left-0 w-[50%] bg-[linear-gradient(90deg,rgb(234_244_255_/_0.96)_0%,rgb(234_244_255_/_0.86)_45%,transparent_100%)]" />
-                        <div ref={playButtonAreaRef} className="absolute inset-0 flex items-center">
-                            <div className="w-[50%] pl-[15%] sm:pl-[17%] md:pl-[18%]">
+                        <div className="absolute inset-y-0 left-0 w-[56%] bg-[linear-gradient(90deg,rgb(234_244_255_/_0.96)_0%,rgb(234_244_255_/_0.86)_45%,transparent_100%)] sm:w-[52%] md:w-[50%]" />
+                        <div ref={playButtonAreaRef} className="absolute inset-0 flex items-center justify-start">
+                            <div className="w-[56%] pl-[8%] sm:w-[52%] sm:pl-[10%] md:w-[50%] md:pl-[18%]">
                                 <div className="w-full max-w-[420px] text-center">
                                     <div className="flex justify-center">
                                         <img
                                             src={bannerProvider.src}
                                             alt={bannerProvider.name}
-                                            className="h-20 object-contain"
+                                            className="h-10 max-w-[140px] object-contain sm:h-12 sm:max-w-[170px] md:h-20 md:max-w-none"
                                         />
                                     </div>
-                                    <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.03em] text-[rgb(42_53_72)]">
+                                    <h1 className="mt-3 hidden text-3xl font-black uppercase tracking-[0.03em] text-[rgb(42_53_72)] md:block">
                                         Lottery
                                     </h1>
-                                    <p className="mx-auto mt-3 max-w-[420px] text-base font-semibold leading-[1.35] text-[rgb(42_53_72)] md:mt-4">
+                                    <p className="mx-auto mt-3 hidden max-w-[420px] text-base font-semibold leading-[1.35] text-[rgb(42_53_72)] md:block md:mt-4">
                                         Pick your numbers, chase the jackpot.
                                     </p>
                                     <a
                                         href="#"
-                                        className="btn-theme-cta mt-4 inline-flex h-10 min-w-[170px] items-center justify-center rounded-[10px] px-7 text-sm font-black tracking-[0.06em] transition hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(29_51_84)] md:mt-6 md:h-14 md:min-w-[260px] md:px-12 md:text-xl"
+                                        className="btn-theme-cta mt-1 inline-flex h-8 min-w-[118px] items-center justify-center self-center rounded-[9px] px-4 text-[12px] font-black tracking-[0.05em] transition hover:-translate-y-0.5 hover:brightness-105 active:translate-y-0 active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-cta-focus)] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(29_51_84)] sm:mt-2 sm:h-9 sm:min-w-[136px] sm:px-5 sm:text-[13px] md:mt-6 md:h-14 md:min-w-[260px] md:self-auto md:rounded-[10px] md:px-12 md:text-xl"
                                         aria-label={`Play ${bannerProvider.name}`}
                                     >
                                         PLAY LOTTERY

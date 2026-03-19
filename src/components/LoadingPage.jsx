@@ -33,7 +33,7 @@ export default function LoadingPage({ message = 'Loading...', fullPage = true, m
     if (fullPage === 'overlay') {
         return (
             <div
-                className="fixed inset-0 top-[88px] z-[100] flex items-center justify-center bg-[var(--color-surface-base)]/90 backdrop-blur-sm"
+                className="fixed inset-0 top-[92px] z-[100] flex items-center justify-center bg-[var(--color-surface-base)]/90 backdrop-blur-sm"
                 role="status"
                 aria-live="polite"
                 aria-label={message}

@@ -241,11 +241,11 @@ export default function FeaturesRow() {
                 icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
             />
 
-            <div className="flex justify-between items-center px-4 gap-4 mt-8 flex-wrap">
+            <div className="grid grid-cols-2 gap-3 px-4 mt-8 lg:flex lg:items-center lg:justify-between lg:gap-4">
                 {features.map((item, idx) => (
                     <div
                         key={idx}
-                        className="group flex min-w-[200px] flex-1 items-center justify-center gap-3 rounded-xl border border-white bg-[rgb(255_255_255_/_0.4)] px-4 py-3 shadow-[0_5px_15px_rgba(0,174,239,0.05)] transition-transform hover:-translate-y-1"
+                        className="group flex min-w-0 items-center justify-center gap-3 rounded-xl border border-white bg-[rgb(255_255_255_/_0.4)] px-3 py-3 shadow-[0_5px_15px_rgba(0,174,239,0.05)] transition-transform hover:-translate-y-1 lg:min-w-[200px] lg:flex-1 lg:px-4"
                     >
                         <div className="flex items-center justify-center rounded-full border border-[var(--color-brand-soft)] bg-[var(--color-surface-base)] p-2 shadow-sm transition-transform group-hover:scale-110">
                             {item.icon}
