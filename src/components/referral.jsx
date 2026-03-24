@@ -331,26 +331,40 @@ function HowItWorksContent() {
     );
 }
 
-export default function AffiliatePage() {
+export default function ReferralPage() {
     const [activeTab, setActiveTab] = useState('Invite friends');
 
     return (
         <main className="w-full bg-[var(--color-page-default)] pb-14">
-            {/* Hero / Banner */}
+            {/* Top bar — matches Live Casino strip */}
+            <section className="w-full border-y border-[rgb(219_226_240)] bg-[var(--color-surface-base-85)] backdrop-blur">
+                <div className="mx-auto flex h-12 w-full max-w-screen-2xl items-center justify-between px-4 md:px-8">
+                    <div className="text-xs font-semibold uppercase tracking-[0.16em] text-[rgb(102_112_134)]">
+                        Referral &amp; Rewards
+                    </div>
+                    <div className="hidden items-center gap-3 text-xs font-semibold text-[rgb(83_96_122)] sm:flex">
+                        <span>Share &amp; earn</span>
+                        <span className="h-1 w-1 rounded-full bg-[rgb(153_166_190)]" />
+                        <span>Unlimited referrals</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* Hero — Live Casino layout, no CTA / no provider logo */}
             <section className="w-full">
                 <div className="w-full mx-auto">
                     <div className="relative overflow-hidden shadow-[var(--shadow-live-banner)]">
                         <img
                             src={affiliateBanner}
                             alt="Referral"
-                            className="block h-auto w-full min-h-[200px] object-cover bg-[rgb(216_227_242)] md:min-h-[280px]"
+                            className="block h-auto w-full bg-[rgb(221_232_248)]"
                         />
-                        <div className="absolute inset-y-0 right-0 flex w-full items-center justify-start md:w-[50%]">
-                            <div className="w-full max-w-[500px] px-4 py-4 text-center md:px-8 md:py-7">
-                                <h1 className="text-2xl font-black uppercase tracking-[0.12em] text-white drop-shadow-lg md:text-3xl lg:text-4xl">
+                        <div className="absolute inset-y-0 right-0 flex w-[56%] items-center justify-end pr-3 sm:w-[52%] sm:pr-4 md:w-[50%] md:justify-start md:pr-0">
+                            <div className="flex w-full max-w-[500px] flex-col items-center justify-center py-4 text-center md:block md:px-8 md:py-7 md:text-center">
+                                <h1 className="mt-1 text-lg font-black uppercase tracking-[0.03em] text-white sm:text-xl md:mt-5 md:text-3xl">
                                     Referral
                                 </h1>
-                                <p className="mx-auto mt-3 max-w-[480px] text-sm font-medium leading-relaxed text-white/90 drop-shadow md:text-base">
+                                <p className="hidden sm:flex mx-auto mt-2 max-w-[420px] text-xs font-semibold leading-[1.35] text-white sm:mt-3 sm:text-sm md:mt-4 md:text-base">
                                     Invite friends, earn rewards. Share your referral code and grow together.
                                 </p>
                             </div>

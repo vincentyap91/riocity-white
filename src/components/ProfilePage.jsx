@@ -11,8 +11,19 @@ import {
     UserCircle2,
 } from 'lucide-react';
 import AccountLayout from './AccountLayout';
+import ProfilePhotoModal from './ProfilePhotoModal';
 import VipStatusPill from './VipStatusPill';
 import { BANKS } from '../constants/banks';
+
+const PROFILE_PHOTO_STORAGE_KEY = 'riocity_profile_photo';
+
+function readStoredProfilePhoto() {
+    try {
+        return localStorage.getItem(PROFILE_PHOTO_STORAGE_KEY);
+    } catch {
+        return null;
+    }
+}
 
 const personalFields = [
     { key: 'username', label: 'Username' },
@@ -108,15 +119,17 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
         accountNumber: '',
         branchName: ''
     });
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState(readStoredProfilePhoto);
+    const [profilePhotoModalOpen, setProfilePhotoModalOpen] = useState(false);
     const [formValues, setFormValues] = useState({
-        username: authUser?.name || 'vincentzo',
-        fullName: 'Vincentzo',
+        username: authUser?.name || 'demo',
+        fullName: 'Demo',
         referralCode: 'Zy4REBcM',
         referralLink: 'https://riocity.com/register?code=Zy4REBcM',
         rank: vipLevel,
         birthday: '08/01/2026',
         gender: 'Male',
-        email: 'vincentzo@gmail.com',
+        email: 'demo@gmail.com',
         phone: '60 123456701',
     });
 
@@ -164,48 +177,85 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
         setBankAccounts((prev) => prev.filter((a) => a.id !== id));
     };
 
+    const handleProfilePhotoSave = (dataUrl) => {
+        setProfilePhotoUrl(dataUrl);
+        try {
+            if (dataUrl) {
+                localStorage.setItem(PROFILE_PHOTO_STORAGE_KEY, dataUrl);
+            } else {
+                localStorage.removeItem(PROFILE_PHOTO_STORAGE_KEY);
+            }
+        } catch {
+            /* ignore quota / private mode — image still shows for this session */
+        }
+    };
+
     return (
         <AccountLayout activePage="profile" authUser={authUser} onNavigate={onNavigate} onLogout={onLogout} onLiveChatClick={onLiveChatClick}>
             <div className="page-container">
                 <h1 className="page-title">Account Details</h1>
 
                 <div className="mt-8 space-y-6">
-                    <div className="surface-card flex flex-col gap-5 rounded-2xl p-6 md:flex-row md:items-center md:justify-between md:gap-6 md:p-8">
-                        <div className="flex flex-col gap-5 md:flex-row md:items-center md:min-w-0 md:flex-1">
-                            <div className="relative shrink-0">
-                                <div className="blue-accent-avatar flex h-20 w-20 items-center justify-center rounded-full md:h-24 md:w-24">
-                                    <UserCircle2 size={48} className="text-[var(--color-accent-600)]" />
-                                </div>
+                    <div className="surface-card flex flex-col gap-4 rounded-2xl p-5 sm:p-6 md:flex-row md:items-center md:justify-between md:gap-8 md:p-8">
+                        <div className="flex min-w-0 flex-1 flex-col gap-4 sm:gap-5 md:flex-row md:items-center">
+                            <div className="relative shrink-0 self-start">
                                 <button
                                     type="button"
+                                    onClick={() => setProfilePhotoModalOpen(true)}
+                                    className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-400)] focus-visible:ring-offset-2"
+                                    aria-label="Change profile photo"
+                                >
+                                    <div className="blue-accent-avatar flex h-[4.5rem] w-[4.5rem] items-center justify-center overflow-hidden rounded-full sm:h-20 sm:w-20 md:h-24 md:w-24">
+                                        {profilePhotoUrl ? (
+                                            <img src={profilePhotoUrl} alt="" className="h-full w-full object-cover" />
+                                        ) : (
+                                            <UserCircle2 size={48} className="text-[var(--color-accent-600)]" />
+                                        )}
+                                    </div>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setProfilePhotoModalOpen(true)}
                                     className="absolute bottom-0 right-0 inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--color-accent-100)] bg-[var(--color-surface-base)] text-[var(--color-accent-600)] shadow-sm transition hover:scale-105 hover:bg-[var(--color-accent-50)]"
-                                    aria-label="Edit profile image"
+                                    aria-label="Edit profile photo"
                                 >
                                     <PencilLine size={14} />
                                 </button>
                             </div>
 
-                            <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent-600)]">
-                                    Verified Account Profile
-                                </p>
-                                <h2 className="mt-2 truncate text-2xl font-bold tracking-tight text-[var(--color-text-strong)] md:text-3xl">
-                                    {formValues.username}
-                                </h2>
-                                <p className="mt-2 text-sm font-medium text-[var(--color-text-muted)]">{formValues.email}</p>
-                                <div className="mt-4 flex flex-wrap items-center gap-2">
-                                    <span className="inline-flex rounded-full border border-[var(--color-accent-100)] bg-[var(--color-accent-50)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-accent-700)]">
+                            <div className="flex min-w-0 flex-1 flex-col gap-3">
+                                <div className="space-y-1.5">
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-accent-600)] sm:text-xs sm:tracking-widest">
+                                        Verified Account Profile
+                                    </p>
+                                    <h2 className="truncate text-2xl font-bold tracking-tight text-[var(--color-text-strong)] md:text-3xl">
+                                        {formValues.username}
+                                    </h2>
+                                    <p className="text-sm font-medium text-[var(--color-text-muted)]">{formValues.email}</p>
+                                </div>
+                                <div className="flex flex-row gap-2 sm:flex-wrap">
+                                    <span className="inline-flex w-fit rounded-full border border-[var(--color-accent-100)] bg-[var(--color-accent-50)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-700)]">
                                         Joined 08/01/2026
                                     </span>
-                                    <span className="inline-flex rounded-full border border-[var(--color-border-default)] bg-[var(--color-surface-muted)] px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
+                                    <span className="inline-flex w-fit rounded-full border border-[var(--color-accent-100)] bg-[var(--color-surface-base)] px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-[var(--color-accent-700)]">
                                         Player ID 679129
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex justify-center md:justify-end md:shrink-0 md:self-center md:ml-4">
-                            <VipStatusPill level={vipLevel} size="large" layout="column" />
+                        <div className="flex w-full shrink-0 flex-col border-t border-[var(--color-border-default)] pt-4 md:w-auto md:border-t-0 md:pt-0 md:pl-2">
+                            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--color-text-muted)] md:sr-only">
+                                VIP rank
+                            </p>
+                            <div className="flex justify-start md:justify-end">
+                                <div className="md:hidden">
+                                    <VipStatusPill level={vipLevel} size="large" layout="row" />
+                                </div>
+                                <div className="hidden md:block">
+                                    <VipStatusPill level={vipLevel} size="large" layout="column" />
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -377,6 +427,13 @@ export default function ProfilePage({ authUser, onLogout, onNavigate, onLiveChat
                     </div>
                 </div>
             </div>
+
+            <ProfilePhotoModal
+                open={profilePhotoModalOpen}
+                onClose={() => setProfilePhotoModalOpen(false)}
+                initialUrl={profilePhotoUrl}
+                onSave={handleProfilePhotoSave}
+            />
         </AccountLayout>
     );
 }

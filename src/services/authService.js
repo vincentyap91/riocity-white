@@ -30,6 +30,6 @@ export async function verify2FALogin(sessionId, code, trustDevice = false) {
   }
   return {
     success: true,
-    user: { name: 'vincentzo', balance: 'MYR 0.00', notifications: 1, vipLevel: 'Diamond' },
+    user: { name: 'demo', balance: 'MYR 0.00', notifications: 1, vipLevel: 'Diamond' },
   };
 }

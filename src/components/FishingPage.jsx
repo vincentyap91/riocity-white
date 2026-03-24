@@ -83,7 +83,7 @@ export default function FishingPage() {
 
             <section className="w-full">
                 <div className="w-full mx-auto">
-                    <div className="relative aspect-[67/15] overflow-hidden border border-[var(--color-border-live)] shadow-[var(--shadow-live-banner)]">
+                    <div className="relative aspect-[67/15] overflow-hidden shadow-[var(--shadow-live-banner)]">
                         <img
                             src={fishingBanner}
                             alt="Fishing Banner"
@@ -93,10 +93,10 @@ export default function FishingPage() {
                         <div className="absolute inset-0 flex items-center">
                             <div className="w-[50%] pl-[15%] sm:pl-[17%] md:pl-[18%]">
                                 <div className="w-full max-w-[420px] text-center">
-                                    <h1 className="text-3xl font-black uppercase tracking-[0.03em] text-[rgb(25_41_71)]">
+                                    <h1 className="text-xl font-black uppercase tracking-[0.03em] text-[rgb(25_41_71)] sm:text-2xl md:text-3xl">
                                         Fishing
                                     </h1>
-                                    <p className="mx-auto mt-3 max-w-[420px] text-base font-semibold leading-[1.35] text-[rgb(42_53_72)] md:mt-4">
+                                    <p className="mx-auto mt-2 hidden max-w-[320px] text-xs font-semibold leading-[1.3] text-[rgb(42_53_72)] sm:hidden md:block md:mt-4 md:max-w-[420px] md:text-base md:leading-[1.35]">
                                         Cast your line, land the big one.
                                     </p>
                                 </div>

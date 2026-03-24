@@ -19,7 +19,7 @@ export default function PlayersPromo() {
                 </div>
 
                 {/* Players Artwork */}
-                <div className="absolute bottom-0 right-[-10px] w-[260px] md:w-[320px] h-full flex items-end pointer-events-none z-0 overflow-visible">
+                <div className="absolute bottom-0 right-[-10px] w-[220px] md:w-[320px] h-full flex items-end pointer-events-none z-0 overflow-visible">
                     <img
                         src={footballers}
                         alt="Football Players"

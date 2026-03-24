@@ -1,9 +1,8 @@
 import React from 'react';
-import { DollarSign, ShieldAlert, MonitorSmartphone } from 'lucide-react';
+import FooterPaymentMethods from './FooterPaymentMethods';
 
 export default function Footer() {
     const links = ['About Us', 'Live Chat', 'Referral', 'Terms & Conditions', 'Follow Us'];
-    const paymentIcons = ['T', 'B', 'P', 'V', 'F', 'E', 'H'];
     const certs = ['Curacao', 'bmm', 'iTechLabs', 'Godaddy', 'GLI', 'Verify'];
 
     return (
@@ -35,15 +34,9 @@ export default function Footer() {
                 </div>
 
                 {/* Payment Methods */}
-                <div className="w-full flex flex-col items-center gap-3 relative z-10 mt-6">
+                <div className="relative z-10 mt-6 flex w-full flex-col items-center gap-3">
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--color-brand-primary)]">Payment Method</h4>
-                    <div className="flex flex-wrap justify-center gap-2">
-                        {paymentIcons.map((letter, idx) => (
-                            <div key={idx} className="flex h-[30px] w-[30px] cursor-pointer items-center justify-center rounded-full bg-[var(--color-brand-primary)] text-xs font-bold italic text-white shadow-sm shadow-[rgb(0_174_239_/_0.3)] transition-transform hover:scale-110">
-                                {letter}
-                            </div>
-                        ))}
-                    </div>
+                    <FooterPaymentMethods />
                 </div>
 
                 {/* Certifications and Compliance */}

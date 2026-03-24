@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import FeaturesRow from './components/FeaturesRow';
@@ -18,7 +18,7 @@ const FishingPage = React.lazy(() => import('./components/FishingPage'));
 const PokerPage = React.lazy(() => import('./components/PokerPage'));
 const PromotionPage = React.lazy(() => import('./components/PromotionPage'));
 const VipPage = React.lazy(() => import('./components/VipPage'));
-const AffiliatePage = React.lazy(() => import('./components/AffiliatePage'));
+const ReferralPage = React.lazy(() => import('./components/referral'));
 import ProfilePage from './components/ProfilePage';
 import AccountLayout from './components/AccountLayout';
 import RegisterPage from './components/RegisterPage';
@@ -111,14 +111,17 @@ function resolvePageFromPath() {
   if (pathname === '/withdrawal') {
     return 'withdrawal';
   }
+  // Legacy app-download URLs render homepage (URL normalized in useEffect)
   if (pathname === '/app-download' || pathname === '/download' || pathname === '/mobile') {
-    return 'app-download';
+    return 'home';
   }
   if (pathname === '/bet-slip') {
     return 'my-bets';
   }
   return 'home';
 }
+
+const DOWNLOAD_APP_HASH = '#download-app';
 
 function App() {
   const [page, setPage] = useState(resolvePageFromPath);
@@ -131,6 +134,41 @@ function App() {
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
+
+  useEffect(() => {
+    const p = window.location.pathname.toLowerCase();
+    if (p === '/app-download' || p === '/download' || p === '/mobile') {
+      window.history.replaceState({}, '', `/${DOWNLOAD_APP_HASH}`);
+    }
+  }, []);
+
+  const scrollToDownloadAppSection = useCallback(() => {
+    document.getElementById('download-app')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
+  const handleDownloadAppClick = useCallback(() => {
+    if (page === 'home') {
+      scrollToDownloadAppSection();
+      return;
+    }
+    setPage('home');
+    if (window.location.pathname !== '/' || window.location.hash !== DOWNLOAD_APP_HASH) {
+      window.history.pushState({}, '', `/${DOWNLOAD_APP_HASH}`);
+    }
+  }, [page, scrollToDownloadAppSection]);
+
+  useEffect(() => {
+    if (page !== 'home') {
+      return undefined;
+    }
+    if (window.location.hash !== DOWNLOAD_APP_HASH) {
+      return undefined;
+    }
+    const id = window.setTimeout(() => {
+      scrollToDownloadAppSection();
+    }, 100);
+    return () => window.clearTimeout(id);
+  }, [page, scrollToDownloadAppSection]);
 
     const handleNavigate = (targetPage) => {
       const settingsToProfile = { security: 'security', notifications: 'notifications' };
@@ -160,7 +198,6 @@ function App() {
       'referral-commission': '/referral-commission',
       deposit: '/deposit',
       withdrawal: '/withdrawal',
-      'app-download': '/app-download',
     };
     const nextPath = pathByPage[resolvedPage] ?? pathByPage[targetPage] ?? '/';
     setPage(resolvedPage);
@@ -203,6 +240,7 @@ function App() {
 
       <Navbar
         onNavigate={handleNavigate}
+        onDownloadAppClick={handleDownloadAppClick}
         activePage={page}
         onLoginClick={() => setLoginModalOpen(true)}
         onRegisterClick={() => handleNavigate('register')}
@@ -216,7 +254,7 @@ function App() {
         }}
       />
 
-      <div className="pt-[114px] md:pt-[92px]">
+      <div className="pt-[113px] md:pt-[92px]">
       <Suspense fallback={<LoadingPage fullPage="overlay" minDelay={300} />}>
       {page === 'home' ? (
         <>
@@ -253,11 +291,7 @@ function App() {
       ) : page === 'vip' ? (
         <VipPage />
       ) : page === 'referral' ? (
-        <AffiliatePage />
-      ) : page === 'app-download' ? (
-        <div className="mx-auto flex w-full max-w-screen-2xl flex-col gap-8 px-4 py-10 md:px-8">
-          <AppDownload />
-        </div>
+        <ReferralPage />
       ) : page === 'profile' ? (
         <ProfilePage authUser={authUser} onLogout={() => setAuthUser(null)} onNavigate={handleNavigate} onLiveChatClick={() => setLiveChatOpen(true)} />
       ) : page === 'verification' ? (
@@ -319,7 +353,7 @@ function App() {
         onLogin={(userOrUsername) => {
           const user = typeof userOrUsername === 'object' && userOrUsername?.name
             ? userOrUsername
-            : { name: userOrUsername || 'vincentzo', balance: 'MYR 0.00', notifications: 1, vipLevel: 'Diamond' };
+            : { name: userOrUsername || 'demo', balance: 'MYR 0.00', notifications: 1, vipLevel: 'Diamond' };
           setAuthUser(user);
           setLoginModalOpen(false);
         }}

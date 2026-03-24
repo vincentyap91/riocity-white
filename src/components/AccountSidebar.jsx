@@ -121,7 +121,7 @@ export default function AccountSidebar({
         if (pageId === 'withdrawal') onNavigate?.('withdrawal');
     };
 
-    const username = authUser?.name || 'vincentzo';
+    const username = authUser?.name || 'demo';
 
     const sidebarWidth = sidebarCollapsed ? 'lg:w-[104px]' : 'lg:w-[320px]';
 

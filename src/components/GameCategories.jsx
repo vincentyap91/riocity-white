@@ -6,7 +6,7 @@ import casinoImage from '../assets/casino.jpg';
 import sportsImage from '../assets/sports.jpg';
 import fishingImage from '../assets/fishing.png';
 import eSportsImage from '../assets/e-sports.png';
-import cockfightImage from '../assets/cockfight.jpg';
+import lotteryImage from '../assets/lottery.jpg';
 
 const CATEGORY_PAGES = {
     Slots: 'slots',
@@ -14,7 +14,7 @@ const CATEGORY_PAGES = {
     Sports: 'sports',
     Fishing: 'fishing',
     'E-Sports': 'e-sports',
-    Cockfight: 'sports', // no dedicated page, link to sports
+    Lottery: 'lottery',
 };
 
 export default function GameCategories({ onNavigate }) {
@@ -24,13 +24,13 @@ export default function GameCategories({ onNavigate }) {
         { name: 'Sports', icon: '⚽', bgUrl: sportsImage },
         { name: 'Fishing', icon: '🐟', bgUrl: fishingImage },
         { name: 'E-Sports', icon: '🎮', bgUrl: eSportsImage },
-        { name: 'Cockfight', icon: '🐓', bgUrl: cockfightImage }
+        { name: 'Lottery', icon: '🎫', bgUrl: lotteryImage }
     ];
 
     return (
         <section className="w-full pt-4">
             <SectionHeader
-                title="Popular Games"
+                title="Popular Category"
                 icon={<Crown size={22} fill="currentColor" className="text-[var(--color-brand-secondary)]" />}
             />
 

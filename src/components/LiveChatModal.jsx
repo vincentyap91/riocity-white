@@ -34,7 +34,7 @@ const messageThreads = [
         type: 'article',
         articleTitle: 'Social Platforms You Use ✨',
         articleBody: [
-            'Hi vincentzo1, we are sharing more support updates on our social platforms.',
+            'Hi demo, we are sharing more support updates on our social platforms.',
             'Follow GemChat for the latest promos, reminders, and festive news.',
             'You can always come back here if you need more help.',
         ],
@@ -139,7 +139,7 @@ export default function LiveChatModal({ open, onClose, authUser }) {
         };
     }, [open, onClose]);
 
-    const username = authUser?.name || 'vincentzo1';
+    const username = authUser?.name || 'demo';
     const [activeTab, setActiveTab] = useState('home');
     const [activeThreadId, setActiveThreadId] = useState(null);
     const [selectedSupportTag, setSelectedSupportTag] = useState('Other');

@@ -118,7 +118,10 @@ export default function AppDownload() {
     ];
 
     return (
-        <section className="relative mt-12 overflow-hidden rounded-[30px] border border-white/80 bg-[linear-gradient(180deg,#edf8ff_0%,#dceffb_100%)] px-5 py-6 shadow-[0_14px_32px_rgba(0,114,188,0.08)] sm:px-6 sm:py-8 lg:px-8 lg:py-10">
+        <section
+            id="download-app"
+            className="relative mt-4 scroll-mt-[114px] overflow-hidden rounded-[30px] border border-white/80 bg-[linear-gradient(180deg,#edf8ff_0%,#dceffb_100%)] px-5 py-6 shadow-[0_14px_32px_rgba(0,114,188,0.08)] sm:px-6 sm:py-8 md:scroll-mt-[92px] lg:px-8 lg:py-10"
+        >
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-[280px] w-[88%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/45 blur-3xl" />
             <div className="pointer-events-none absolute right-[-40px] top-12 h-32 w-32 rounded-full bg-[rgb(0_174_239_/_0.12)] blur-3xl" />
 
@@ -136,7 +139,7 @@ export default function AppDownload() {
                     </p>
                 </div>
 
-                <div className="relative mx-auto flex h-[300px] w-full max-w-[360px] items-center justify-center sm:h-[340px]">
+                <div className="relative mx-auto flex h-[290px] w-full max-w-[360px] items-center justify-center">
                     <div className="pointer-events-none absolute left-1/2 top-1/2 h-[210px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-[60%] bg-[#c6eeff]/75 blur-2xl" />
 
                     <div

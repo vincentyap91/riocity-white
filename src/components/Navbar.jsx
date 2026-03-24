@@ -4,7 +4,6 @@ import {
     ArrowUpFromLine,
     ChevronDown,
     CircleDollarSign,
-    EllipsisVertical,
     Menu,
     Smartphone,
     X,
@@ -24,9 +23,10 @@ import LiveCasinoMenu from './LiveCasinoMenu';
 import LanguageSwitcher from './LanguageSwitcher';
 import { supportOptions } from '../constants/supportOptions';
 import { settingsOptions } from '../constants/settingsOptions';
+import { getVipStatus } from '../constants/vipStatus';
 import VipStatusPill from './VipStatusPill';
 
-export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, onRegisterClick, authUser, onLogout, onAccountDetailsClick, onLiveChatClick, onCasinoProviderSelect }) {
+export default function Navbar({ onNavigate, onDownloadAppClick, activePage = 'home', onLoginClick, onRegisterClick, authUser, onLogout, onAccountDetailsClick, onLiveChatClick, onCasinoProviderSelect }) {
     const vipLevel = authUser?.vipLevel || 'Diamond';
     const [casinoMenuOpen, setCasinoMenuOpen] = useState(false);
     const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -96,6 +96,11 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
         onNavigate?.(targetPage);
     };
 
+    const handleMobileDownloadApp = () => {
+        setMobileMenuOpen(false);
+        onDownloadAppClick?.();
+    };
+
     return (
         <nav
             className="fixed top-0 left-0 right-0 w-full z-50 shadow-[0_2px_12px_rgba(0,0,0,0.08)]"
@@ -105,13 +110,13 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                 <button
                     type="button"
                     onClick={() => setMobileMenuOpen((open) => !open)}
-                    className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white transition hover:bg-white/15"
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-white/10 text-white transition hover:bg-white/15"
                     aria-label="Open mobile menu"
                     aria-expanded={mobileMenuOpen}
                 >
                     <Menu size={16} />
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
                     {authUser && (
                         <VipStatusPill
                             level={vipLevel}
@@ -124,14 +129,14 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                     <LanguageSwitcher
                         value={language}
                         onChange={setLanguage}
-                        buttonClassName="h-10 rounded-xl px-3"
+                        buttonClassName="h-10 shrink-0 rounded-xl px-3"
                     />
                 </div>
             </div>
 
             <button
                 type="button"
-                onClick={() => onNavigate?.('app-download')}
+                onClick={() => onDownloadAppClick?.()}
                 className="fixed bottom-24 right-6 z-[110] inline-flex h-14 w-14 items-center justify-center rounded-full border border-white/20 bg-[linear-gradient(90deg,var(--color-brand-secondary)_0%,var(--color-brand-primary)_100%)] text-white shadow-[0_12px_24px_rgba(0,0,0,0.18)] transition hover:brightness-105 md:hidden"
                 aria-label="Download app"
             >
@@ -143,7 +148,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                     <div className="flex gap-4 items-center h-full">
                         <button
                             type="button"
-                            onClick={() => onNavigate?.('app-download')}
+                            onClick={() => onDownloadAppClick?.()}
                             className="flex h-7 items-center gap-2 rounded-lg border border-white/25 bg-white/5 px-3 hover:bg-white/10 hover:border-white/35 transition-all"
                         >
                             <Smartphone size={14} className="shrink-0 text-white/90" />
@@ -161,38 +166,48 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 <span className="font-bold tracking-[0.01em]">{authUser.balance}</span>
                                 <CircleDollarSign size={14} className="text-[var(--color-nav-gold)]" />
                             </div>
+                            <div className="flex h-7 shrink-0 items-stretch overflow-hidden rounded-[9px] border border-white/15 bg-[linear-gradient(180deg,#16508f_0%,#0d3562_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setProfileMenuOpen(false);
+                                        onNavigate?.('profile');
+                                    }}
+                                    className="flex min-w-0 max-w-[min(100%,15rem)] items-center gap-1.5 px-2 text-white transition hover:bg-white/[0.06]"
+                                    aria-label="My profile"
+                                >
+                                    <img
+                                        src={getVipStatus(vipLevel).medal}
+                                        alt=""
+                                        className="h-5 w-5 shrink-0 object-contain"
+                                    />
+                                    <span className="truncate text-xs font-bold tracking-[0.02em] text-[rgb(255_240_160)]">
+                                        {authUser.name}
+                                    </span>
+                                    <UserCircle2 size={18} className="shrink-0 text-white/90" />
+                                </button>
+                                <span className="w-px shrink-0 self-stretch bg-white/20" aria-hidden />
+                                <button
+                                    type="button"
+                                    onClick={() => setProfileMenuOpen((open) => !open)}
+                                    className="inline-flex w-7 shrink-0 items-center justify-center text-white/80 transition hover:bg-white/[0.06] hover:text-white"
+                                    aria-haspopup="menu"
+                                    aria-expanded={profileMenuOpen}
+                                    aria-label="Account menu"
+                                >
+                                    <ChevronDown
+                                        size={13}
+                                        className={`transition-transform ${profileMenuOpen ? 'rotate-180' : ''}`}
+                                    />
+                                </button>
+                            </div>
                             <button
                                 type="button"
-                                onClick={() => setProfileMenuOpen((open) => !open)}
-                                className="flex h-7 items-center gap-1.5 rounded-[9px] px-0 text-white transition hover:bg-white/10"
-                                aria-haspopup="menu"
-                                aria-expanded={profileMenuOpen}
-                            >
-                                <span className="font-bold text-[rgb(255_240_160)] xl:hidden">{authUser.name}</span>
-                                <VipStatusPill level={vipLevel} theme="dark" size="header" username={authUser.name} className="hidden xl:inline-flex" />
-                                <div className="relative">
-                                    <UserCircle2 size={20} className="text-white/90" />
-                                    {authUser.notifications > 0 && (
-                                        <span className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--color-danger-main)] px-1 text-[10px] font-black text-white">
-                                            {authUser.notifications}
-                                        </span>
-                                    )}
-                                </div>
-                                <ChevronDown
-                                    size={13}
-                                    className={`text-white/75 transition-transform ${profileMenuOpen ? 'rotate-180' : ''}`}
-                                />
-                            </button>
-                            <button
-                                type="button"
-                                className="inline-flex h-7 w-7 items-center justify-center rounded-[9px] text-white/75 hover:bg-white/10 hover:text-white transition"
-                                aria-label="More account options"
-                            >
-                                <EllipsisVertical size={15} />
-                            </button>
-                            <button
-                                type="button"
-                                className="btn-theme-cta-soft h-7 rounded-[9px] px-4 font-black tracking-wide transition hover:brightness-105"
+                                onClick={() => {
+                                    setProfileMenuOpen(false);
+                                    onNavigate?.('deposit');
+                                }}
+                                className="btn-theme-cta-soft h-7 shrink-0 rounded-[9px] px-4 font-black tracking-wide transition hover:brightness-105"
                             >
                                 DEPOSIT
                             </button>
@@ -498,10 +513,18 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 </div>
                                 <button
                                     type="button"
-                                    onClick={() => handleMobileNavigate('deposit')}
-                                    className="btn-theme-cta-soft inline-flex min-h-10 items-center justify-center rounded-xl px-4 text-sm font-black tracking-wide"
+                                    onClick={() => onNavigate?.('deposit')}
+                                    className="btn-theme-cta-soft inline-flex min-h-10 shrink-0 items-center justify-center rounded-xl px-3.5 text-sm font-black tracking-wide"
                                 >
                                     Deposit
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => onNavigate?.('profile')}
+                                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/10 text-white transition hover:bg-white/15"
+                                    aria-label="My profile"
+                                >
+                                    <UserCircle2 size={20} className="text-white/90" />
                                 </button>
                             </>
                         ) : (
@@ -544,9 +567,17 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
             >
                 <div className="relative border-b border-white/10 px-4 py-4">
                     <div className="min-w-0">
-                            <h2 className="pr-14 text-2xl font-black leading-tight">
-                                {authUser ? `Hi, ${authUser.name}` : 'Play Anywhere'}
-                            </h2>
+                            {authUser ? (
+                                <button
+                                    type="button"
+                                    onClick={() => handleMobileNavigate('profile')}
+                                    className="w-full pr-14 text-left text-2xl font-black leading-tight transition hover:opacity-90"
+                                >
+                                    Hi, {authUser.name}
+                                </button>
+                            ) : (
+                                <h2 className="pr-14 text-2xl font-black leading-tight">Play Anywhere</h2>
+                            )}
                             {authUser && (
                                 <div className="mt-3 space-y-3">
                                     <VipStatusPill level={vipLevel} theme="dark" />
@@ -651,7 +682,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => handleMobileNavigate('app-download')}
+                                    onClick={handleMobileDownloadApp}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
                                 >
                                     <Smartphone size={16} />
@@ -712,7 +743,7 @@ export default function Navbar({ onNavigate, activePage = 'home', onLoginClick, 
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={() => handleMobileNavigate('app-download')}
+                                    onClick={handleMobileDownloadApp}
                                     className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 text-sm font-bold text-white transition hover:bg-white/15"
                                 >
                                     <Smartphone size={16} />
